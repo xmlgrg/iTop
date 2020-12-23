@@ -19,6 +19,7 @@ use OqlInterpreter;
 use utils;
 
 /**
+ * @group itopStructure
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled
