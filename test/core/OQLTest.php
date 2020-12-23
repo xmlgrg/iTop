@@ -46,6 +46,7 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
+     * @group change-mgt
 	 * @dataProvider NestedQueryProvider
 	 *
 	 * @param $sQuery
@@ -363,6 +364,7 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
+     * @group change-mgt
 	 * @dataProvider MakeSelectQueryProvider
 	 * @param $sOQL
 	 * @param $sExpectedExceptionClass
