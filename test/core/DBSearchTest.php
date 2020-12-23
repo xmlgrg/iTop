@@ -38,6 +38,7 @@ use FunctionExpression;
 
 
 /**
+ * @group itopStorageMgmt
  * Tests of the DBSearch class.
  * <ul>
  * <li>MakeGroupByQuery</li>

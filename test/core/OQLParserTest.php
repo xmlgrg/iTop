@@ -23,7 +23,7 @@ class OQLParserTest extends ItopDataTestCase
 	const USE_TRANSACTION = false;
 
 	/**
-	 * @group changeMgt
+	 * @group iTopChangeMgt
 	 * @group itopConfigMgmt
 	 * @group itopRequestMgmt
 	 * @dataProvider NestedQueryProvider

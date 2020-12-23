@@ -102,6 +102,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopFaqLight
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \Exception
@@ -190,6 +191,7 @@ class TagSetFieldDataTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopFaqLight
 	 * Test that tag code cannot be modified if used
 	 *
 	 * @throws \CoreException
@@ -244,6 +246,10 @@ class TagSetFieldDataTest extends ItopDataTestCase
 		static::assertFalse(true);
 	}
 
+	/**
+	 * @group itopFaqLight
+	 * @throws \CoreException
+	 */
 	public function testMaxTagsAllowed()
 	{
 		/** @var \AttributeTagSet $oAttDef */

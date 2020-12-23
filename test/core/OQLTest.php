@@ -46,7 +46,7 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
-     * @group changeMgt
+     * @group iTopChangeMgt
 	 * @group itopConfigMgmt
 	 * @group itopRequestMgmt
 	 * @dataProvider NestedQueryProvider
@@ -368,7 +368,7 @@ class OQLTest extends ItopDataTestCase
 	}
 
 	/**
-     * @group changeMgt
+     * @group iTopChangeMgt
 	 * @group itopConfigMgmt
 	 * @group itopRequestMgmt
 	 * @dataProvider MakeSelectQueryProvider

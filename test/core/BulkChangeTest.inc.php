@@ -158,6 +158,7 @@ class BulkChangeTest extends ItopDataTestCase {
 	}
 
 	/**
+	 * @group itopConfigMgmt
 	 * test $oBulk->Process with new server datas
 	 * @dataProvider CSVImportProvider
 	 *
@@ -312,6 +313,7 @@ class BulkChangeTest extends ItopDataTestCase {
 
 
 	/**
+	 * @group itopConfigMgmt
 	 * test $oBulk->Process with new server and new organization datas
 	 * @dataProvider CSVImportProvider2
 	 *
