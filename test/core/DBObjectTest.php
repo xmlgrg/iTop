@@ -83,6 +83,7 @@ class DBObjectTest extends ItopDataTestCase
 	}
 
 	/**
+	 * @group itopRequestMgmt
 	 * @covers DBObject::GetOriginal
 	 */
 	public function testGetOriginal()

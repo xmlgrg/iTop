@@ -42,6 +42,7 @@ use DBSearch;
 use Dict;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

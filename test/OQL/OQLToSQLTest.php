@@ -13,6 +13,7 @@ use SetupUtils;
 use utils;
 
 /**
+ * @group itopRequestMgmt
  * @runTestsInSeparateProcesses
  * @preserveGlobalState disabled
  * @backupGlobals disabled

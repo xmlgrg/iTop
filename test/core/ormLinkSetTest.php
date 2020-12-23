@@ -34,6 +34,7 @@ use ormLinkSet;
 
 
 /**
+ * @group itopRequestMgmt
  * Tests of the ormLinkSet class using N-N links between FunctionalCI and Contact
  *
  * @runTestsInSeparateProcesses
