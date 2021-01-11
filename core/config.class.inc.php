@@ -62,8 +62,8 @@ define('DEFAULT_LOG_WEB_SERVICE', true);
 define('DEFAULT_QUERY_CACHE_ENABLED', true);
 
 
-define('DEFAULT_MIN_DISPLAY_LIMIT', 10);
-define('DEFAULT_MAX_DISPLAY_LIMIT', 15);
+define('DEFAULT_MIN_DISPLAY_LIMIT', 20);
+define('DEFAULT_MAX_DISPLAY_LIMIT', 30);
 define('DEFAULT_STANDARD_RELOAD_INTERVAL', 5 * 60);
 define('DEFAULT_FAST_RELOAD_INTERVAL', 1 * 60);
 define('DEFAULT_SECURE_CONNECTION_REQUIRED', false);
@@ -615,12 +615,12 @@ class Config
 		],
 		'cas_include_path' => [
 			'type' => 'string',
-			'description' => 'The path where to find the phpCAS library',
+			'description' => 'Deprecated, the lib is now included with iTop',
 			// examples... not used (nor 'description')
-			'default' => '/usr/share/php',
-			'value' => '/usr/share/php',
+			'default' => '',
+			'value' => '',
 			'source_of_value' => '',
-			'show_in_conf_sample' => true,
+			'show_in_conf_sample' => false,
 		],
 		'cas_version' => [
 			'type' => 'string',
@@ -1293,7 +1293,7 @@ class Config
 		'backoffice_default_theme' => [
 			'type' => 'string',
 			'description' => 'Default theme used for '.ITOP_APPLICATION_SHORT.'\'s console',
-			'default' => 'light-grey',
+			'default' => 'fullmoon',
 			'value' => '',
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,

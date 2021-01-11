@@ -136,6 +136,10 @@ class Extension
 			})
 		);
 
+		// var_export can be used for example to transform a PHP boolean to 'true' or 'false' strings
+		// @see https://www.php.net/manual/fr/function.var-export.php
+		$oTwigEnv->addFilter(new Twig_SimpleFilter('var_export', 'var_export'));
+
 
 		// Function to check our current environment
 		// Usage in twig:   {% if is_development_environment() %}
@@ -169,7 +173,8 @@ class Extension
 		// Usage in twig: {{ render_block(oBlock) }}
 		/** @since 3.0.0 */
 		$oTwigEnv->addFunction(new Twig_SimpleFunction('render_block', function(iUIBlock $oBlock, $aContextParams = []){
-			return BlockRenderer::RenderBlockTemplates($oBlock, $aContextParams);
+			$oRenderer = new BlockRenderer($oBlock, $aContextParams);
+			return $oRenderer->RenderHtml();
 		}, ['is_safe' => ['html']]));
 	}
 

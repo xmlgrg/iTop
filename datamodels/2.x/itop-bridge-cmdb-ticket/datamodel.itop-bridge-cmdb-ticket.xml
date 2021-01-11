@@ -58,9 +58,15 @@
         </field>
         <field id="impact_code" xsi:type="AttributeEnum">
           <values>
-            <value id="manual">manual</value>
-            <value id="computed">computed</value>
-            <value id="not_impacted">not_impacted</value>
+            <value id="manual">
+              <code>manual</code>
+            </value>
+            <value id="computed">
+              <code>computed</code>
+            </value>
+            <value id="not_impacted">
+              <code>not_impacted</code>
+            </value>
           </values>
           <sql>impact_code</sql>
           <default_value>manual</default_value>

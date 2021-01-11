@@ -429,7 +429,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Zoek',
-	'UI:ClickToCreateNew' => 'Maak een %1$s aan',
+	'UI:ClickToCreateNew' => 'Maak een %1$s aan~~',
 	'UI:SearchFor_Class' => 'Zoek naar %1$s objecten',
 	'UI:NoObjectToDisplay' => 'Geen object om weer te geven.',
 	'UI:Error:SaveFailed' => 'Het object kan niet bewaard worden:',
@@ -704,7 +704,7 @@ Dict::Add('NL NL', 'Dutch', 'Nederlands', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Ontwikkelde OQL voor aantal',
 	'UI:RunQuery:ResultSQLCount' => 'Resulterende SQL voor aantal',
 	'UI:RunQuery:ResultSQL' => 'Resulterende SQL',
-	'UI:RunQuery:Error' => 'Er trad een fout op tijdens het uitvoeren van deze query: %1$s',
+	'UI:RunQuery:Error' => 'Er trad een fout op tijdens het uitvoeren van deze query',
 	'UI:Query:UrlForExcel' => 'URL om te gebruiken voor MS Excel-webquery\'s',
 	'UI:Query:UrlV1' => 'De lijst van velden is leeg gelaten. De pagina <em>export-V2.php</em> kan niet aangeroepen worden zonder deze informatie.Daarom verwijst de onderstaande link naar de oude export-pagina: <em>export.php</em>. Deze verouderde versie heeft enkele beperkingen: de lijst van geëxporteerde velden kan verschillen afhankelijk van het gekozen export-formaat en het datamodel van iTop. Als je wil dat de lijst van geëxporteerde kolommen hetzelfde blijft over lange tijd, dan moet je een waarde opgeven voor het attribuut "Velden" en de pagina <em>export-V2.php</em> gebruiken.',
 	'UI:Schema:Title' => ITOP_APPLICATION_SHORT.' objecten-schema',

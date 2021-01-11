@@ -21,10 +21,12 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/building.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/building.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -48,8 +50,22 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+              <style>
+                <main_color>#689F38</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <style>
+                <main_color>#E1E7EC</main_color>
+                <complementary_color>#6E7A8A</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -80,7 +96,9 @@
                   <dashlet id="11" xsi:type="DashletHeaderDynamic">
                     <rank>0</rank>
                     <title>Organization:Overview:FunctionalCIs</title>
-                    <icon>itop-config-mgmt/images/server.png</icon>
+                    <style>
+                      <icon>itop-config-mgmt/images/server.png</icon>
+                    </style>
                     <subtitle>Organization:Overview:FunctionalCIs:subtitle</subtitle>
                     <query>SELECT FunctionalCI WHERE org_id=:this-&gt;id</query>
                     <group_by>finalclass</group_by>
@@ -184,10 +202,12 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/location.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/location.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -207,8 +227,22 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+              <style>
+                <main_color>#689F38</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <style>
+                <main_color>#E1E7EC</main_color>
+                <complementary_color>#6E7A8A</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -353,10 +387,14 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/team.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/team.png</icon>
+          <main_color>green</main_color>
+          <complementary_color>white</complementary_color>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -378,8 +416,22 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="active">active</value>
-            <value id="inactive">inactive</value>
+            <value id="active">
+              <code>active</code>
+              <style>
+                <main_color>#689F38</main_color>
+                <complementary_color>#FFFFFF</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
+            <value id="inactive">
+              <code>inactive</code>
+              <style>
+                <main_color>#E1E7EC</main_color>
+                <complementary_color>#6E7A8A</complementary_color>
+                <decoration_classes/>
+              </style>
+            </value>
           </values>
           <sql>status</sql>
           <default_value>active</default_value>
@@ -408,8 +460,12 @@
         </field>
         <field id="notify" xsi:type="AttributeEnum">
           <values>
-            <value id="yes">yes</value>
-            <value id="no">no</value>
+            <value id="yes">
+              <code>yes</code>
+            </value>
+            <value id="no">
+              <code>no</code>
+            </value>
           </values>
           <sql>notify</sql>
           <default_value>yes</default_value>
@@ -523,10 +579,12 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-		<fields_semantic>
-			<image_attribute>picture</image_attribute>
-		</fields_semantic>
-        <icon>images/person.png</icon>
+        <fields_semantic>
+          <image_attribute>picture</image_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/person.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -843,7 +901,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/team.png</icon>
+        <style>
+          <icon>images/team.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1108,10 +1168,12 @@
         <naming>
           <attributes/>
         </naming>
-		<fields_semantic>
-			<state_attribute>status</state_attribute>
-		</fields_semantic>
-        <icon>images/document.png</icon>
+        <fields_semantic>
+          <state_attribute>status</state_attribute>
+        </fields_semantic>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1162,9 +1224,15 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="draft">draft</value>
-            <value id="published">published</value>
-            <value id="obsolete">obsolete</value>
+            <value id="draft">
+              <code>draft</code>
+            </value>
+            <value id="published">
+              <code>published</code>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -1260,7 +1328,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/document.png</icon>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1373,7 +1443,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/document.png</icon>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1467,7 +1539,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/document.png</icon>
+        <style>
+          <icon>images/document.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1691,7 +1765,9 @@
               <dashlet id="1" xsi:type="DashletHeaderDynamic">
                 <rank>1</rank>
                 <title>Menu:Contact</title>
-                <icon>itop-structure/images/team.png</icon>
+                <style>
+                  <icon>itop-structure/images/team.png</icon>
+                </style>
                 <subtitle>Menu:Contact:Count</subtitle>
                 <query>SELECT Contact</query>
                 <group_by>status</group_by>
@@ -1745,7 +1821,9 @@
               <dashlet id="1" xsi:type="DashletHeaderStatic">
                 <rank>0</rank>
                 <title>Menu:ConfigManagement:Typology</title>
-                <icon>itop-structure/images/typology.png</icon>
+                <style>
+                  <icon>itop-structure/images/typology.png</icon>
+                </style>
               </dashlet>
               <dashlet id="9" xsi:type="DashletBadge">
                 <rank>8</rank>
@@ -1770,33 +1848,27 @@
   </menus>
   <branding>
     <themes>
-      <theme id="light-grey" _delta="define">
+      <theme id="fullmoon" _delta="define">
         <variables>
         </variables>
         <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
         </imports>
         <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
         </stylesheets>
-        <precompiled_stylesheet>itop-structure/precompiled-themes/light-grey/main.css</precompiled_stylesheet>
       </theme>
       <theme id="test-red" _delta="define">
         <variables>
-          <variable id="backoffice-environment-banner-background-color">#C53030</variable>
-          <variable id="backoffice-environment-banner-text-color">#F7FAFC</variable>
-          <variable id="backoffice-environment-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
+          <variable id="ibo-page-banner-background-color">$ibo-color-red-600</variable>
+          <variable id="ibo-page-banner-text-color">$ibo-color-red-100</variable>
+          <variable id="ibo-page-banner-text-content">"THIS IS A TEST INSTANCE"</variable>
         </variables>
         <imports>
-          <import id="css-variables">../css/css-variables.scss</import>
         </imports>
         <stylesheets>
-          <stylesheet id="jqueryui">../css/ui-lightness/jqueryui.scss</stylesheet>
-          <stylesheet id="main">../css/light-grey.scss</stylesheet>
-          <stylesheet id="environment-banner">../css/backoffice-environment-banner.scss</stylesheet>
+          <stylesheet id="fullmoon">../css/backoffice/main.scss</stylesheet>
+          <stylesheet id="environment-banner">../css/backoffice/themes/page-banner.scss</stylesheet>
         </stylesheets>
-        <precompiled_stylesheet>itop-structure/precompiled-themes/test-red/main.css</precompiled_stylesheet>
       </theme>
     </themes>
   </branding>

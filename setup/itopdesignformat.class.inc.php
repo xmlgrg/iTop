@@ -797,6 +797,58 @@ class iTopDesignFormat
 			// Remove current node from lifecycle
 			$this->DeleteNode($oNode);
 		}
+
+		// New Enum values format
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		foreach ($oNodeList as $oNode) {
+			$sCode = $oNode->textContent;
+			$oNode->textContent = '';
+			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $sCode);
+			$oNode->appendChild($oCodeNode);
+		}
+
+		// MetaEnum
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
+		foreach ($oNodeList as $oNode) {
+			$sCode = $oNode->textContent;
+			$oNode->textContent = '';
+			$oCodeNode = $oNode->ownerDocument->createElement("enum_code", $sCode);
+			$oNode->appendChild($oCodeNode);
+		}
+		
+		// N°3516 Remove legacy backoffice theme
+		// Remove completely light-grey theme
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="light-grey"]');
+		
+		// Update test-red theme
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/imports/import[@id="css-variables"]');
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="jqueryui"]');
+		$this->RemoveNodeFromXPath('/itop_design/branding/themes/theme[@id="test-red"]/stylesheets/stylesheet[@id="main"]');
+
+		$sTestRedBannerBackgroundColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-background-color"]';
+		$this->SetNodeAttribute($sTestRedBannerBackgroundColorPath, 'id', 'ibo-page-banner-background-color');
+
+		$sTestRedBannerTextColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-color"]';
+		$this->SetNodeAttribute($sTestRedBannerTextColorPath, 'id', 'ibo-page-banner-text-color');
+
+		$sTestRedBannerTextContentPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="backoffice-environment-banner-text-content"]';
+		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'ibo-page-banner-text-content');
+
+		// Add Class Style
+		$oNodeList = $oXPath->query("/itop_design/classes//class");
+		foreach ($oNodeList as $oNode) {
+			// Move "icon" node under "style" node
+			$oIconNode = $oXPath->query('icon', $oNode)->item(0);
+			if ($oIconNode) {
+				$sIcon = $oIconNode->textContent;
+				$this->DeleteNode($oIconNode);
+
+				$oStyleNode = $oNode->ownerDocument->createElement("style");
+				$oNode->appendChild($oStyleNode);
+				$oIconNode = $oNode->ownerDocument->createElement("icon", $sIcon);
+				$oStyleNode->appendChild($oIconNode);
+			}
+		}
 	}
 
 	/**
@@ -827,8 +879,7 @@ class iTopDesignFormat
 		foreach ($oNodeList as $oNode) {
 			// Move node under lifecycle only if there is such a node
 			$oLifecycleNode = $oXPath->query("../../../lifecycle", $oNode)->item(0);
-			if($oLifecycleNode !== null)
-			{
+			if ($oLifecycleNode !== null) {
 				// Create attribute node
 				$oAttributeNode = $oLifecycleNode->ownerDocument->createElement("attribute", $oNode->nodeValue);
 				$oLifecycleNode->appendChild($oAttributeNode);
@@ -840,8 +891,100 @@ class iTopDesignFormat
 		// - Remove semantic node
 		$sPath = "/itop_design//class/properties/fields_semantic";
 		$this->RemoveNodeFromXPath($sPath);
+
+		// New Enum values format
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/values/value");
+		foreach ($oNodeList as $oNode) {
+			$oCodeNode = $oXPath->query('enum_code', $oNode)->item(0);
+			$sCode = $oCodeNode->textContent;
+			$this->DeleteNode($oCodeNode);
+			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
+			if ($oStyleNode) {
+				$this->DeleteNode($oStyleNode);
+			}
+			$oNode->textContent = $sCode;
+		}
+
+		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeEnum']/default_style";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// MetaEnum
+		$oNodeList = $oXPath->query("/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/values/value");
+		foreach ($oNodeList as $oNode) {
+			$oCodeNode = $oXPath->query('enum_code', $oNode)->item(0);
+			$sCode = $oCodeNode->textContent;
+			$this->DeleteNode($oCodeNode);
+			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
+			if ($oStyleNode) {
+				$this->DeleteNode($oStyleNode);
+			}
+			$oNode->textContent = $sCode;
+		}
+
+		$sPath = "/itop_design/classes//class/fields/field[@xsi:type='AttributeMetaEnum']/default_style";
+		$this->RemoveNodeFromXPath($sPath);
+
+		// N°3516 Bring back legacy themes
+		// Update test-red theme
+		$sTestRedBannerBackgroundColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-background-color"]';
+		$this->SetNodeAttribute($sTestRedBannerBackgroundColorPath, 'id', 'backoffice-environment-banner-background-color');
+
+		$sTestRedBannerTextColorPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-text-color"]';
+		$this->SetNodeAttribute($sTestRedBannerTextColorPath, 'id', 'backoffice-environment-banner-text-color');
+
+		$sTestRedBannerTextContentPath = '/itop_design/branding/themes/theme[@id="test-red"]/variables/variable[@id="ibo-page-banner-text-content"]';
+		$this->SetNodeAttribute($sTestRedBannerTextContentPath, 'id', 'backoffice-environment-banner-text-content');
+
+		// Remove class style
+		$oNodeList = $oXPath->query("/itop_design/classes//class");
+		foreach ($oNodeList as $oNode) {
+			$oStyleNode = $oXPath->query('style', $oNode)->item(0);
+			if ($oStyleNode) {
+				$oIconNode = $oXPath->query('icon', $oStyleNode)->item(0);
+				if ($oIconNode) {
+					// Move back the "icon" node to the class
+					$sIcon = $oIconNode->textContent;
+					$oNewIconNode = $oNode->ownerDocument->createElement("icon", $sIcon);
+					$oNode->appendChild($oNewIconNode);
+					$this->DeleteNode($oIconNode);
+				}
+				$this->DeleteNode($oStyleNode);
+			}
+		}
 	}
 
+	/**
+	 *
+	 * Replace those weird setAttribute calls on DOMNode above 🤷
+	 *
+	 * @param string $sPath
+	 * @param string $sAttributeName
+	 * @param string $sAttributeValue
+	 *
+	 * @return void
+	 *
+	 * @since 3.0.0
+	 */
+	private function SetNodeAttribute($sPath, $sAttributeName, $sAttributeValue)
+	{
+		$oXPath = new DOMXPath($this->oDocument);
+
+		$oNodeList = $oXPath->query($sPath);
+		foreach ($oNodeList as $oNode)
+		{
+			if($oNode->attributes)
+			{
+				foreach ($oNode->attributes as $oAttribute)
+				{
+					if($oAttribute->nodeName === $sAttributeName)
+					{
+						$oAttribute->nodeValue = $sAttributeValue;
+					}
+				}
+			}
+		}
+	}
+	
 	/**
 	 * @param string $sPath
 	 *

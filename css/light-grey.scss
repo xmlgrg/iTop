@@ -1985,12 +1985,6 @@
 		text-align: center;
 	}
 
-	div#logo div {
-		height: 88px;
-		width: 244px;
-		background: url($approot-relative + "images/itop-logo-2.png?v=" + $version) left no-repeat;
-	}
-
 	#left-pane .ui-layout-north {
 		overflow: hidden;
 	}
@@ -2168,12 +2162,6 @@
 	span.ui-icon {
 		float: left;
 		margin: 0 2px;
-	}
-
-	.ui-layout-button-pin-down {
-		background: url($approot-relative + "images/splitter-bkg.png?v=" + $version) transparent;
-		width: 16px;
-		background-position: -144px -144px;
 	}
 
 	.ui-layout-resizer-west-open {
@@ -3371,41 +3359,7 @@
 		margin-right: 1em;
 	}
 
-	div.explain-printable {
-		border: 5px solid $complement-color;
-		background: $complement-light;
-		color: $text-color;
-		padding: 10px;
-		margin: 0;
-		font-size: 12px;
-	}
 
-	.hideable-chapter {
-		cursor: pointer;
-	}
-
-	#hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter span {
-		padding-left: 20px;
-		background: url($approot-relative + "images/eye-open-555.png?v=" + $version) 2px center no-repeat;
-	}
-
-	#hiddeable_chapters .ui-tabs .ui-tabs-nav li.hideable-chapter.strikethrough span {
-		text-decoration: line-through;
-		background: url($approot-relative + "images/eye-closed-555.png?v=" + $version) 2px center no-repeat;
-	}
-
-	.printable-version legend {
-		padding-left: 26px;
-		background: $complement-color url($approot-relative + "images/eye-open-fff.png?v=" + $version) 8px center no-repeat;
-	}
-
-	.printable-version .strikethrough legend {
-		background: $complement-color url($approot-relative + "images/eye-closed-fff.png?v=" + $version) 8px center no-repeat;
-	}
-
-	.printable-version fieldset.strikethrough span {
-		display: none;
-	}
 
 	h2.printable-tab-title {
 		border-bottom: 2px solid;
@@ -3595,16 +3549,6 @@
 				&:hover {
 					text-decoration: none;
 					color: $breadcrumb-highlight-color;
-				}
-
-				&::after {
-					content: '';
-					position: absolute;
-					background-image: url($approot-relative + "images/breadcrumb-separator.png?v=" + $version);
-					background-repeat: no-repeat;
-					width: 8px;
-					height: 16px;
-					margin-left: 5px;
 				}
 			}
 
@@ -3941,7 +3885,7 @@
 
 	// - Edit is always styled like the selectize items, see below.
 	%attribute-set-item-edition {
-		display: inline-block;
+		display: inline;
 		margin-right: 3px;
 		margin-bottom: 3px;
 		padding: 4px 6px;

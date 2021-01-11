@@ -21,6 +21,7 @@ namespace Combodo\iTop\Application\UI\Base\Component\Alert;
 
 
 use Combodo\iTop\Application\UI\Base\UIBlock;
+use utils;
 
 /**
  * Class Alert
@@ -77,6 +78,12 @@ class Alert extends UIBlock
 
 	/** @var string DEFAULT_COLOR */
 	public const DEFAULT_COLOR = self::ENUM_COLOR_NEUTRAL;
+	/** @var bool Default value for static::$bIsClosable */
+	public const DEFAULT_IS_CLOSABLE = true;
+	/** @var bool Default value for static::$bIsCollapsible */
+	public const DEFAULT_IS_COLLAPSIBLE = true;
+	/** @var bool Default value for static::$bIsOpenedByDefault */
+	public const DEFAULT_IS_OPENED_BY_DEFAULT = true;
 
 	/** @var string $sTitle */
 	protected $sTitle;
@@ -84,8 +91,16 @@ class Alert extends UIBlock
 	protected $sContent;
 	/** @var string $sColor */
 	protected $sColor;
-	/** @var bool */
+	/** @var bool Whether the alert can be closed or not */
+	protected $bIsClosable;
+	/** @var bool Whether the alert can be collapsed or not */
+	protected $bIsCollapsible;
+	/** @var bool Whether the alert is opened by default or not, only works when $bIsCollapsible set to true */
 	protected $bIsOpenedByDefault;
+	/** @var boolean if true will store collapsible state */
+	protected $bIsSaveCollapsibleStateEnabled = false;
+	/** @var string localStorage key used to store collapsible state */
+	protected $sSectionStateStorageKey;
 
 	/**
 	 * Alert constructor.
@@ -94,17 +109,30 @@ class Alert extends UIBlock
 	 * @param string $sContent
 	 * @param string $sColor
 	 * @param string|null $sId
-	 * @param bool|null $bIsOpenedByDefault
 	 */
-	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null,
-		?bool $bIsOpenedByDefault = true
-	)
+	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
 	{
 		$this->sTitle = $sTitle;
 		$this->sContent = $sContent;
 		$this->sColor = $sColor;
-		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
+		$this->bIsClosable = static::DEFAULT_IS_CLOSABLE;
+		$this->bIsCollapsible = static::DEFAULT_IS_COLLAPSIBLE;
+		$this->bIsOpenedByDefault = static::DEFAULT_IS_OPENED_BY_DEFAULT;
 		parent::__construct($sId);
+	}
+
+	/**
+	 * @param $sSectionStateStorageKey
+	 *
+	 * @return self
+	 */
+	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
+	{
+		$this->bIsSaveCollapsibleStateEnabled = true;
+		$sSectionStateStorageKeyPrefix = utils::GetConfig()->GetItopInstanceid();
+		$this->sSectionStateStorageKey = $sSectionStateStorageKeyPrefix.'/'.$sSectionStateStorageKey;
+
+		return $this;
 	}
 
 	/**
@@ -170,9 +198,61 @@ class Alert extends UIBlock
 		return $this;
 	}
 
-	public function IsOpenedByDefault()
+	/**
+	 * @see self::$bIsClosable
+	 * @return bool
+	 */
+	public function IsClosable(): bool
 	{
-		return $this->bIsOpenedByDefault;
+		return $this->bIsClosable;
+	}
+
+	/**
+	 * @see self::$bIsClosable
+	 * @param bool $bIsClosable
+	 *
+	 * @return $this
+	 */
+	public function SetIsClosable(bool $bIsClosable)
+	{
+		$this->bIsClosable = $bIsClosable;
+
+		return $this;
+	}
+
+	/**
+	 * @see self::$bIsCollapsible
+	 * @return bool
+	 */
+	public function IsCollapsible(): bool
+	{
+		return $this->bIsCollapsible;
+	}
+
+	/**
+	 * @see self::$bIsCollapsible
+	 * @param bool $bIsCollapsible
+	 *
+	 * @return $this
+	 */
+	public function SetIsCollapsible(bool $bIsCollapsible)
+	{
+		$this->bIsCollapsible = $bIsCollapsible;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsOpenedByDefault(): bool
+	{
+		if($this->IsCollapsible()) {
+			return $this->bIsOpenedByDefault;
+		}
+		else {
+			return true;
+		}
 	}
 
 	/**
@@ -185,5 +265,15 @@ class Alert extends UIBlock
 		$this->bIsOpenedByDefault = $bIsOpenedByDefault;
 
 		return $this;
+	}
+
+	public function IsSaveCollapsibleStateEnabled(): bool
+	{
+		return $this->bIsSaveCollapsibleStateEnabled;
+	}
+
+	public function GetSessionCollapsibleStateStorageKey(): string
+	{
+		return $this->sSectionStateStorageKey;
 	}
 }

@@ -53,10 +53,31 @@
 			<fields>
 				<field id="operational_status" xsi:type="AttributeMetaEnum">
 					<values>
-						<value id="ongoing">ongoing</value>
-						<value id="resolved">resolved</value>
-						<value id="closed">closed</value>
+						<value id="ongoing">
+							<code>ongoing</code>
+						</value>
+						<value id="resolved">
+							<code>resolved</code>
+							<style>
+								<main_color>#689F38</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-check</decoration_classes>
+							</style>
+						</value>
+						<value id="closed">
+							<code>closed</code>
+							<style>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
+					<default_style>
+						<main_color>#2B6CB0</main_color>
+						<complementary_color>#FFFFFF</complementary_color>
+						<decoration_classes/>
+					</default_style>
 					<sql>operational_status</sql>
 					<default_value>ongoing</default_value>
 					<mappings>
@@ -408,9 +429,15 @@
 				</field>
 				<field id="role_code" xsi:type="AttributeEnum">
 					<values>
-						<value id="manual">manual</value>
-						<value id="computed">computed</value>
-						<value id="do_not_notify">do_not_notify</value>
+						<value id="manual">
+							<code>manual</code>
+						</value>
+						<value id="computed">
+							<code>computed</code>
+						</value>
+						<value id="do_not_notify">
+							<code>do_not_notify</code>
+						</value>
 					</values>
 					<sql>impact_code</sql>
 					<default_value>manual</default_value>
@@ -475,10 +502,12 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-                <fields_semantic>
-                    <state_attribute>status</state_attribute>
-                </fields_semantic>
-				<icon>images/workorder.png</icon>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
+				<style>
+					<icon>images/workorder.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -494,8 +523,12 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="open">open</value>
-						<value id="closed">closed</value>
+						<value id="open">
+							<code>open</code>
+						</value>
+						<value id="closed">
+							<code>closed</code>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>open</default_value>

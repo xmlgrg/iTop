@@ -24,6 +24,7 @@ use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\Field\Field;
+use Combodo\iTop\Application\UI\Base\Component\Field\FieldFactory;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
@@ -74,6 +75,8 @@ abstract class cmdbAbstractObject extends CMDBObject implements iDisplay
 	public const ENUM_OBJECT_MODE_CREATE = 'create';
 	/** @var string ENUM_OBJECT_MODE_STIMULUS */
 	public const ENUM_OBJECT_MODE_STIMULUS = 'stimulus';
+	/** @var string ENUM_OBJECT_MODE_PRINT */
+	public const ENUM_OBJECT_MODE_PRINT = 'print';
 	/**
 	 * @var string DEFAULT_OBJECT_MODE
 	 * @since 3.0.0
@@ -236,18 +239,18 @@ EOF
 	}
 
 	/**
-	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param \WebPage  $oPage
+	 * @param bool      $bEditMode
+	 * @param string    $sMode      Mode in which the object is displayed (see static::ENUM_OBJECT_MODE_XXX)
 	 *
+	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
-	 * @throws \DictExceptionMissingString
 	 * @throws \MySQLException
 	 * @throws \OQLException
-	 * @throws \Exception
 	 */
-	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false)
+	public function DisplayBareHeader(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
 		// Standard Header with name, actions menu and history block
 		//
@@ -300,7 +303,7 @@ EOF
 			}
 		}
 
-		if (!$oPage->IsPrintableVersion())
+		if (!$oPage->IsPrintableVersion() && ($sMode === static::ENUM_OBJECT_MODE_VIEW))
 		{
 			// action menu
 			$oSingletonFilter = new DBObjectSearch(get_class($this));
@@ -862,7 +865,7 @@ EOF
 								if ($oAttDef->IsWritable()) {
 									if (($sStateAttCode === $sAttCode) && (MetaModel::HasLifecycle($sClass))) {
 										// State attribute is always read-only from the UI
-										$sHTMLValue = $this->GetStateLabel();
+										$sHTMLValue = $this->GetAsHTML($sAttCode);
 										$val = array(
 											'label' => '<label>'.$oAttDef->GetLabel().'</label>',
 											'value' => $sHTMLValue,
@@ -954,7 +957,10 @@ EOF
 							$val['attflags'] = ($bEditMode) ? $this->GetFormAttributeFlags($sAttCode) : OPT_ATT_READONLY;
 
 							// - How the field should be rendered
-							$val['layout'] = (in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? 'large' : 'small';
+							$val['layout'] =
+								(in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField()))
+									? Field::ENUM_FIELD_LAYOUT_LARGE
+									: Field::ENUM_FIELD_LAYOUT_SMALL;
 
 							// - For simple fields, we get the raw (stored) value as well
 							$bExcludeRawValue = false;
@@ -967,8 +973,7 @@ EOF
 							$val['value_raw'] = ($bExcludeRawValue === false) ? $this->Get($sAttCode) : '';
 
 							// The field is visible, add it to the current column
-							$aDetails[] = $val;
-							$oField = new Field($val);
+							$oField = FieldFactory::MakeFromParams($val);
 							if ($sFieldsetName[0] != '_') {
 								$oFieldSet->AddSubBlock($oField);
 							} else {
@@ -976,11 +981,6 @@ EOF
 							}
 						}
 					}
-//					if ($sFieldsetName[0] != '_') {
-//						$oFieldSet->AddSubBlock(new Html($oPage->GetDetails($aDetails)));
-//					} else {
-//						$oColumn->AddSubBlock(new Html($oPage->GetDetails($aDetails)));
-//					}
 				}
 			}
 		}
@@ -991,8 +991,11 @@ EOF
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param bool $bEditMode
+	 * @param bool     $bEditMode
+	 * @param string   $sMode       Mode in which the object will be displayed (see static::ENUM_OBJECT_MODE_XXX)
 	 *
+	 * @throws \ApplicationException
+	 * @throws \ArchivedObjectException
 	 * @throws \CoreException
 	 * @throws \CoreUnexpectedValue
 	 * @throws \DictExceptionMissingString
@@ -1000,24 +1003,22 @@ EOF
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
 	 * @throws \OQLException
-	 * @throws \Exception
 	 */
-	public function DisplayDetails(WebPage $oPage, $bEditMode = false)
+	public function DisplayDetails(WebPage $oPage, $bEditMode = false, $sMode = self::ENUM_OBJECT_MODE_VIEW)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
-		$sMode = static::ENUM_OBJECT_MODE_VIEW;
 
 		$oPage->add(<<<HTML
 <!-- Beginning of object-details -->
-<div id="search-widget-results-outer" class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
+<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode">
 HTML
 		);
 
 		/** @var \iTopWebPage $oPage */
-		$this->DisplayBareHeader($oPage, $bEditMode);
+		$this->DisplayBareHeader($oPage, $bEditMode, $sMode);
 		// Object's details
-		// TODO 3.0.0: Complete the factory
+		// TODO 3.0.0: Complete the factory and use it in the different methods (DisplayModifyForm, DisplayTransitionForm), see N°3518
 		$oObjectDetails = ObjectFactory::MakeDetails($this);
 		$oPage->AddUiBlock($oObjectDetails);
 
@@ -2854,8 +2855,9 @@ EOF
 
 	/**
 	 * @param \WebPage $oPage
-	 * @param string $sStimulus
-	 * @param null $aPrefillFormParam
+	 * @param string   $sStimulus
+	 * @param null     $aPrefillFormParam
+	 * @param bool     $bDisplayBareProperties Whether to display the object details or not
 	 *
 	 * @throws \ApplicationException
 	 * @throws \ArchivedObjectException
@@ -2865,12 +2867,14 @@ EOF
 	 * @throws \MissingQueryArgument
 	 * @throws \MySQLException
 	 * @throws \MySQLHasGoneAwayException
+	 * @throws \OQLException
 	 */
 	public function DisplayStimulusForm(WebPage $oPage, $sStimulus, $aPrefillFormParam = null, $bDisplayBareProperties = true)
 	{
 		$sClass = get_class($this);
 		$iKey = $this->GetKey();
 		$sMode = static::ENUM_OBJECT_MODE_STIMULUS;
+		$iTransactionId = utils::GetNewTransactionId();
 
 		$aTransitions = $this->EnumTransitions();
 		$aStimuli = MetaModel::EnumStimuli($sClass);
@@ -2908,17 +2912,6 @@ EOF
 		$sCurrentState = $this->GetState();
 		$sTargetState = $aTransitions[$sStimulus]['target_state'];
 
-		$oPage->set_title($sActionLabel);
-		$oPage->add(<<<HTML
-<!-- Beginning of object-details -->
-<div class="object-details" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
-	<div class="page_header">
-		<h1>$sActionLabel - <span class="hilite">{$this->GetName()}</span></h1>
-	</div>
-	<h1>$sActionDetails</h1>
-HTML
-		);
-
 		$aExpectedAttributes = $this->GetTransitionAttributes($sStimulus /*, current state*/);
 		if ($aPrefillFormParam != null)
 		{
@@ -2926,19 +2919,12 @@ HTML
 			$this->PrefillForm('state_change', $aPrefillFormParam);
 			$aExpectedAttributes = $aPrefillFormParam['expected_attributes'];
 		}
-		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
-		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
-		{
-			// bottom: Displays the ticket details BEFORE the actions
-			$oPage->add('<div class="ui-widget-content">');
-			$this->DisplayBareProperties($oPage);
-			$oPage->add('</div>');
-		}
-		$oPage->add("<div class=\"wizContainer\">\n");
-		$oPage->add("<form id=\"apply_stimulus\" method=\"post\" enctype=\"multipart/form-data\" onSubmit=\"return OnSubmit('apply_stimulus');\">\n");
+
 		$aDetails = array();
 		$iFieldIndex = 0;
-		$aFieldsMap = array();
+		$aFieldsMap = [
+			'id' => 'id',
+		];
 
 		// The list of candidate fields is made of the ordered list of "details" attributes + other attributes
 		$aAttributes = array();
@@ -3041,37 +3027,70 @@ HTML
 			}
 		}
 
-		$oPage->add('<table><tr><td>');
-		$oPage->details($aDetails);
-		$oPage->add('</td></tr></table>');
-		$oPage->add("<input type=\"hidden\" name=\"id\" value=\"".$this->GetKey()."\" id=\"id\">\n");
-		$aFieldsMap['id'] = 'id';
-		$oPage->add("<input type=\"hidden\" name=\"class\" value=\"$sClass\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"operation\" value=\"apply_stimulus\">\n");
-		$oPage->add("<input type=\"hidden\" name=\"stimulus\" value=\"$sStimulus\">\n");
-		$iTransactionId = utils::GetNewTransactionId();
-		$oPage->add("<input type=\"hidden\" name=\"transaction_id\" value=\"".$iTransactionId."\">\n");
-		if ($sOwnershipToken !== null)
-		{
-			$oPage->add("<input type=\"hidden\" name=\"ownership_token\" value=\"".htmlentities($sOwnershipToken,
-					ENT_QUOTES, 'UTF-8')."\">\n");
-		}
-		$oAppContext = new ApplicationContext();
-		$oPage->add($oAppContext->GetForForm());
-		$oPage->add("<button type=\"button\" class=\"action cancel\" onClick=\"BackToDetails('$sClass', ".$this->GetKey().", '', '$sOwnershipToken')\"><span>".Dict::S('UI:Button:Cancel')."</span></button>&nbsp;&nbsp;&nbsp;&nbsp;\n");
-		$oPage->add("<button type=\"submit\" class=\"action\"><span>$sActionLabel</span></button>\n");
-		$oPage->add("</form>\n");
+		$oPage->set_title($sActionLabel);
 		$oPage->add(<<<HTML
-	</div>
-</div><!-- End of object-details -->
+<!-- Beginning of object-transition -->
+<div class="object-transition" data-object-class="$sClass" data-object-id="$iKey" data-object-mode="$sMode" data-object-current-state="$sCurrentState" data-object-target-state="$sTargetState">
 HTML
 		);
+
+		// Page title and subtitles
+		$oPage->AddUiBlock(TitleFactory::MakeForPage($sActionLabel.' - '.$this->GetName()));
+		if(!empty($sActionDetails)) {
+			$oPage->AddUiBlock(TitleFactory::MakeForPage($sActionDetails));
+		}
+
+		$sButtonsPosition = MetaModel::GetConfig()->Get('buttons_position');
+		// Display object detail above if buttons must be displayed on the bottom
+		if ($sButtonsPosition == 'bottom' && $bDisplayBareProperties)
+		{
+			// bottom: Displays the ticket details BEFORE the actions
+			$this->DisplayDetails($oPage, false, $sMode);
+		}
+
+		$oFormContainer = new UIContentBlock(null, 'ibo-wizard-container');
+		$oPage->AddUiBlock($oFormContainer);
+		$oForm = new Combodo\iTop\Application\UI\Base\Component\Form\Form('apply_stimulus');
+		$oFormContainer->AddSubBlock($oForm);
+
+		$oForm->SetOnSubmitJsCode("return OnSubmit('apply_stimulus');")
+			->AddSubBlock(InputFactory::MakeForHidden('id', $this->GetKey(), 'id'))
+			->AddSubBlock(InputFactory::MakeForHidden('class', $sClass))
+			->AddSubBlock(InputFactory::MakeForHidden('operation', 'apply_stimulus'))
+			->AddSubBlock(InputFactory::MakeForHidden('stimulus', $sStimulus))
+			->AddSubBlock(InputFactory::MakeForHidden('transaction_id', $iTransactionId));
+
+		if ($sOwnershipToken !== null)
+		{
+			$oForm->AddSubBlock(InputFactory::MakeForHidden('ownership_token', utils::HtmlEntities($sOwnershipToken)));
+		}
+
+		// Note: Remove the table is we want fields to occupy the whole width of the container
+		$oForm->AddHtml('<table><tr><td>');
+		$oForm->AddHtml($oPage->GetDetails($aDetails));
+		$oForm->AddHtml('</td></tr></table>');
+
+		$oAppContext = new ApplicationContext();
+		$oForm->AddHtml($oAppContext->GetForForm());
+
+		$oCancelButton = ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+		$oCancelButton->SetOnClickJsCode("BackToDetails('{$sClass}', '{$this->GetKey()}', '', '{$sOwnershipToken}');");
+		$oForm->AddSubBlock($oCancelButton);
+
+		$oSubmitButton = ButtonFactory::MakeForPrimaryAction($sActionLabel, 'submit', 'submit', true);
+		$oForm->AddSubBlock($oSubmitButton);
+
+		$oPage->add(<<<HTML
+<!-- End of object-transition -->
+</div>
+HTML
+		);
+
+		// Display object detail below if buttons must be displayed on the top
 		if ($sButtonsPosition != 'top' && $bDisplayBareProperties)
 		{
 			// bottom or both: Displays the ticket details AFTER the actions
-			$oPage->add('<div class="ui-widget-content">');
-			$this->DisplayBareProperties($oPage);
-			$oPage->add('</div>');
+			$this->DisplayDetails($oPage, false, $sMode);
 		}
 
 		$iFieldsCount = count($aFieldsMap);
@@ -3193,49 +3212,45 @@ EOF
 		$oAttDef = MetaModel::GetAttributeDef($sClass, $sAttCode);
 		if ((!$oAttDef->IsLinkSet()) && (($iFlags & OPT_ATT_HIDDEN) == 0) && !($oAttDef instanceof AttributeDashboard))
 		{
-			// The field is visible in the current state of the object
-			if ($sStateAttCode == $sAttCode)
-			{
-				// Special display for the 'state' attribute itself
-				$sDisplayValue = $this->GetStateLabel();
-			}
-			else
-			{
-				if ($oAttDef->GetEditClass() == 'Document')
-				{
-					$oDocument = $this->Get($sAttCode);
-					if (!$oDocument->IsEmpty())
-					{
-						$sDisplayValue = $this->GetAsHTML($sAttCode);
-						$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
-								$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-						$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
-								$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
-					}
-					else
-					{
-						$sDisplayValue ='';
-					}
-				}
-				elseif ($oAttDef instanceof AttributeDashboard)
-				{
+			// First prepare the label
+			// - Attribute description
+			$sDescription = $oAttDef->GetDescription();
+			$sDescriptionForHTMLAttributes = utils::HtmlEntities($sDescription);
+			$sDescriptionHTMLAttributes = (empty($sDescriptionForHTMLAttributes)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLAttributes.'"';
+
+			// - Fullscreen toggler for large fields
+			$sFullscreenTogglerTooltip = Dict::S('UI:ToggleFullScreen');
+			$sFullscreenTogglerHTML = (false === in_array($oAttDef->GetEditClass(), static::GetAttEditClassesToRenderAsLargeField())) ? '' : <<<HTML
+<a href="#" class="ibo-field--fullscreen-toggler" data-role="ibo-field--fullscreen-toggler" 
+data-tooltip-content="{$sFullscreenTogglerTooltip}" data-fullscreen-toggler-target="$(this).closest('[data-role=\'ibo-field\']')"><span class="fas fa-fw fa-expand-arrows-alt"></span></a>
+HTML;
+
+			$sLabelAsHtml = '<span '.$sDescriptionHTMLAttributes.' >'.MetaModel::GetLabel($sClass, $sAttCode).'</span>'.$sFullscreenTogglerHTML;
+
+			// Then prepare the value
+			// - The field is visible in the current state of the object
+			if ($oAttDef->GetEditClass() == 'Document') {
+				$oDocument = $this->Get($sAttCode);
+				if (!$oDocument->IsEmpty()) {
+					$sDisplayValue = $this->GetAsHTML($sAttCode);
+					$sDisplayValue .= "<br/>".Dict::Format('UI:OpenDocumentInNewWindow_',
+							$oDocument->GetDisplayLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+					$sDisplayValue .= "<br/>".Dict::Format('UI:DownloadDocument_',
+							$oDocument->GetDownloadLink(get_class($this), $this->GetKey(), $sAttCode)).", \n";
+				} else {
 					$sDisplayValue = '';
 				}
-				else
-				{
-					$sDisplayValue = $this->GetAsHTML($sAttCode);
-				}
+			} elseif ($oAttDef instanceof AttributeDashboard) {
+				$sDisplayValue = '';
+			} else {
+				$sDisplayValue = $this->GetAsHTML($sAttCode);
 			}
+			$sValueAsHtml = $sDisplayValue;
 
-			// Attribute description
-			$sDescription = $oAttDef->GetDescription();
-			$sDescriptionForHTMLTag = utils::HtmlEntities($sDescription);
-			$sDescriptionHTMLTag = (empty($sDescriptionForHTMLTag)) ? '' : 'class="ibo-has-description" data-tooltip-content="'.$sDescriptionForHTMLTag.'"';
-
-			$retVal = array(
-				'label' => '<span '.$sDescriptionHTMLTag.' >'.MetaModel::GetLabel($sClass, $sAttCode).'</span>',
-				'value' => $sDisplayValue,
-			);
+			$retVal = [
+				'label' => $sLabelAsHtml,
+				'value' => $sValueAsHtml,
+			];
 		}
 
 		return $retVal;

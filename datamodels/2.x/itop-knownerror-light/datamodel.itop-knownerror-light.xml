@@ -18,7 +18,9 @@
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/known-error.png</icon>
+        <style>
+          <icon>images/known-error.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="org_id"/>
@@ -79,10 +81,18 @@
         </field>
         <field id="domain" xsi:type="AttributeEnum">
           <values>
-            <value id="Network">Network</value>
-            <value id="Server">Server</value>
-            <value id="Application">Application</value>
-            <value id="Desktop">Desktop</value>
+            <value id="Network">
+              <code>Network</code>
+            </value>
+            <value id="Server">
+              <code>Server</code>
+            </value>
+            <value id="Application">
+              <code>Application</code>
+            </value>
+            <value id="Desktop">
+              <code>Desktop</code>
+            </value>
           </values>
           <sql>domain</sql>
           <default_value>Application</default_value>

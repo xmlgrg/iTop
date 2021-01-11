@@ -24,7 +24,9 @@
                 <fields_semantic>
                     <state_attribute>status</state_attribute>
                 </fields_semantic>
-                <icon>images/problem.png</icon>
+                <style>
+                    <icon>images/problem.png</icon>
+                </style>
                 <reconciliation>
                     <attributes>
                         <attribute id="ref"/>
@@ -39,11 +41,44 @@
             <fields>
                 <field id="status" xsi:type="AttributeEnum">
                     <values>
-                        <value id="new">new</value>
-                        <value id="assigned">assigned</value>
-                        <value id="resolved">resolved</value>
-                        <value id="closed">closed</value>
+                        <value id="new">
+                            <code>new</code>
+                            <style>
+                                <main_color>#2C5382</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="assigned">
+                            <code>assigned</code>
+                            <style>
+                                <main_color>#2C5382</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
+                        <value id="resolved">
+                            <code>resolved</code>
+                            <style>
+                                <main_color>#689F38</main_color>
+                                <complementary_color>#FFFFFF</complementary_color>
+                                <decoration_classes>fas fa-check</decoration_classes>
+                            </style>
+                        </value>
+                        <value id="closed">
+                            <code>closed</code>
+                            <style>
+                                <main_color>#E1E7EC</main_color>
+                                <complementary_color>#6E7A8A</complementary_color>
+                                <decoration_classes/>
+                            </style>
+                        </value>
                     </values>
+                    <default_style>
+                        <main_color>#2B6CB0</main_color>
+                        <complementary_color>#FFFFFF</complementary_color>
+                        <decoration_classes/>
+                    </default_style>
                     <sql>status</sql>
                     <default_value>new</default_value>
                     <is_null_allowed>false</is_null_allowed>
@@ -86,9 +121,15 @@
                 </field>
                 <field id="impact" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
                     </values>
                     <sql>impact</sql>
                     <default_value>1</default_value>
@@ -97,10 +138,18 @@
                 </field>
                 <field id="urgency" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
+                        <value id="4">
+                            <code>4</code>
+                        </value>
                     </values>
                     <sql>urgency</sql>
                     <default_value>1</default_value>
@@ -109,10 +158,18 @@
                 </field>
                 <field id="priority" xsi:type="AttributeEnum">
                     <values>
-                        <value id="1">1</value>
-                        <value id="2">2</value>
-                        <value id="3">3</value>
-                        <value id="4">4</value>
+                        <value id="1">
+                            <code>1</code>
+                        </value>
+                        <value id="2">
+                            <code>2</code>
+                        </value>
+                        <value id="3">
+                            <code>3</code>
+                        </value>
+                        <value id="4">
+                            <code>4</code>
+                        </value>
                     </values>
                     <sql>priority</sql>
                     <default_value>1</default_value>

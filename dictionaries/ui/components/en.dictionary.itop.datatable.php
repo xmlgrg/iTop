@@ -17,15 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-// Global search
+// Display DataTable
 Dict::Add('EN US', 'English', 'English', array(
 	'UI:Datatables:Language:Processing' => 'Please wait...',
-	'UI:Datatables:Language:Search' => 'Filter:',
 	'UI:Datatables:Language:LengthMenu' => 'Showing _MENU_ out of',
 	'UI:Datatables:Language:ZeroRecords' => 'No result',
 	'UI:Datatables:Language:Info' => '_TOTAL_ items',
 	'UI:Datatables:Language:InfoEmpty' => 'No information',
-	'UI:Datatables:Language:InfoFiltered' => 'filtered out of _MAX_ items',
 	'UI:Datatables:Language:EmptyTable' => 'No data available in this table',
 	'UI:Datatables:Language:DisplayLength:All' => 'All',
 	'UI:Datatables:Language:Sort:Ascending' => 'enable for an ascending sort',

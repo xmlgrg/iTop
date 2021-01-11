@@ -423,7 +423,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Pesquisar',
-	'UI:ClickToCreateNew' => 'Criar um(a) novo(a) %1$s',
+	'UI:ClickToCreateNew' => 'Criar um(a) %1$s',
 	'UI:SearchFor_Class' => 'Pesquisar por objeto(s) %1$s',
 	'UI:NoObjectToDisplay' => 'Nenhum objeto encontrado.',
 	'UI:Error:SaveFailed' => 'O objeto não pode ser salvo:',
@@ -698,7 +698,7 @@ Dict::Add('PT BR', 'Brazilian', 'Brazilian', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
 	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
-	'UI:RunQuery:Error' => 'Ocorreu um erro ao executar a consulta: %1$s',
+	'UI:RunQuery:Error' => 'Ocorreu um erro ao executar a consulta',
 	'UI:Query:UrlForExcel' => 'URL a ser usada para consultas web MS-Excel',
 	'UI:Query:UrlV1' => 'A lista de campos não foi especificada. A página <em>export-V2.php</em> não pode ser chamada sem essa informação. Portanto, o URL sugerido abaixo aponta para a página herdada: <em>export.php</em>. Essa versão herdada da exportação tem a seguinte limitação: a lista de campos exportados pode variar dependendo do formato de saída e do modelo de dados do iTop. Se você quiser garantir que a lista de colunas exportadas permaneça estável a longo prazo, então você deve especificar um valor para o atributo "Fields" e usar a página <em>export-V2.php</em>.',
 	'UI:Schema:Title' => 'Esquema de objetos',

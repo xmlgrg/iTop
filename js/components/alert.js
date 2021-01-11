@@ -25,7 +25,10 @@ $(function()
 		{
 			// default options
 			options:
-				{},
+				{
+					hasCollapsibleStateSavingEnabled: false,
+					collapsibleStateStorageKey: null,
+				},
 			css_classes:
 				{
 					opened: 'ibo-is-opened',
@@ -33,8 +36,7 @@ $(function()
 			js_selectors:
 				{
 					close_button: '[data-role="ibo-alert--close-button"]',
-					minimize_button: '[data-role="ibo-alert--minimize-button"]',
-					maximize_button: '[data-role="ibo-alert--maximize-button"]',
+					collapse_toggler: '[data-role="ibo-alert--collapse-toggler"]',
 				},
 
 			// the constructor
@@ -52,21 +54,35 @@ $(function()
 				this.element.find(this.js_selectors.close_button).on('click', function (oEvent) {
 					me._onCloseButtonClick(oEvent);
 				});
-				this.element.find(this.js_selectors.minimize_button).on('click', function (oEvent) {
-					me._onMinimizeButtonClick(oEvent);
-				});
-				this.element.find(this.js_selectors.maximize_button).on('click', function (oEvent) {
-					me._onMaximizeButtonClick(oEvent);
+				this.element.find(this.js_selectors.collapse_toggler).on('click', function (oEvent) {
+					me._onCollapseTogglerClick(oEvent);
 				});
 			},
 			_onCloseButtonClick: function (oEvent) {
 				this.element.hide();
 			},
-			_onMinimizeButtonClick: function (oEvent) {
-				this.element.removeClass(this.css_classes.opened);
+			_onCollapseTogglerClick: function (oEvent) {
+				this.element.toggleClass(this.css_classes.opened);
+
+				if (this.options.hasCollapsibleStateSavingEnabled) {
+					localStorage.setItem(
+						this.options.collapsibleStateStorageKey,
+						this.element.hasClass(this.css_classes.opened)
+					);
+				}
 			},
-			_onMaximizeButtonClick: function (oEvent) {
-				this.element.addClass(this.css_classes.opened);
-			},
+			enableSaveCollapsibleState: function (bOpenedByDefault, sSectionStateStorageKey) {
+				this.options.hasCollapsibleStateSavingEnabled = true;
+				this.options.collapsibleStateStorageKey = sSectionStateStorageKey;
+
+				let bStoredSectionState = JSON.parse(localStorage.getItem(sSectionStateStorageKey));
+				let bIsSectionOpenedInitially = (bStoredSectionState == null) ? bOpenedByDefault : bStoredSectionState;
+
+				if (bIsSectionOpenedInitially) {
+					this.element.addClass(this.css_classes.opened);
+				} else {
+					this.element.removeClass(this.css_classes.opened);
+				}
+			}
 		})
 });

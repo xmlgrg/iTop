@@ -414,7 +414,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:Treeview:ExpandAll' => 'Tout déplier',
 
 	'UI:SearchToggle' => 'Recherche',
-	'UI:ClickToCreateNew' => 'Créer un nouvel objet de type %1$s',
+	'UI:ClickToCreateNew' => 'Créer un(e) %1$s',
 	'UI:SearchFor_Class' => 'Rechercher des objets de type %1$s',
 	'UI:NoObjectToDisplay' => 'Aucun objet à afficher.',
 	'UI:Error:SaveFailed' => 'L\'objet ne peut pas être sauvé : ',
@@ -689,7 +689,7 @@ Dict::Add('FR FR', 'French', 'Français', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'OQL développé pour le compte',
 	'UI:RunQuery:ResultSQLCount' => 'SQL généré pour le compte',
 	'UI:RunQuery:ResultSQL' => 'SQL généré',
-	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête : %1$s',
+	'UI:RunQuery:Error' => 'Une erreur s\'est produite durant l\'exécution de la requête',
 	'UI:Query:UrlForExcel' => 'Lien à copier-coller dans Excel, pour déclarer une source de données à partir du web',
 	'UI:Query:UrlV1' => 'La liste des champs à exporter n\'a pas été spécifiée. La page <em>export-V2.php</em> ne peut pas fonctionner sans cette information. Par conséquent, le lien fourni ci-dessous pointe sur l\'ancienne page: <em>export.php</em>. Cette ancienne version de l\'export présente la limitation suivante : la liste des champs exportés varie en fonction du format de l\'export et du modèle de données. <br/>Si vous devez garantir la stabilité du format de l\'export (liste des colonnes) sur le long terme, alors vous devrez renseigner l\'attribut "Champs" et utiliser la page <em>export-V2.php</em>.',
 	'UI:Schema:Title' => 'Modèle de données iTop',

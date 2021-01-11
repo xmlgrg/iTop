@@ -149,9 +149,17 @@ class DisplayBlock
 				'update_history',   /** bool add breadcrumb entry */
 				'default',          /** array of default attribute values */
 				'menu_actions_target',  /** string html link target */
+				'toolkit_menu',     /** bool add toolkit menu */
 			], DataTableFactory::GetAllowedParams()),
 			'list_search' => array_merge([
 				'update_history',   /** bool add breadcrumb entry */
+				'result_list_outer_selector',   /** string js selector of the search result display */
+				'table_inner_id',   /** string html id of the results table */
+				'json',             /** string  */
+				'hidden_criteria',  /** string search criteria not visible */
+				'baseClass',        /** string base class */
+				'action',           /** string */
+				'open',             /** bool open by default the search */
 			], DataTableFactory::GetAllowedParams()),
 			'search' => array_merge([
 				'baseClass',        /** string search root class */
@@ -162,6 +170,7 @@ class DisplayBlock
 				'table_inner_id',   /** string html id of the results table */
 				'json',             /** string  */
 				'hidden_criteria',  /** string search criteria not visible */
+				'class',            /** string class searched */
 			], DataTableFactory::GetAllowedParams()),
 			'summary' => [
 				'status[block]',        /** string object 'status' att code */
@@ -182,6 +191,8 @@ class DisplayBlock
 			'auto_reload',          /** bool|string|numeric 'fast' (reload faster) or 'standard' (= true or 'true') (reload standard) or reload interval value (numeric) */
 			'c[menu]',              /** string current navigation menu */
 			'c[org_id]',            /** int current filtered organization */
+			'c[menu',               /** string workaround due to extraparams in menunode */
+			'c[org_id',             /** int workaround due to extraparams in menunode */
 			'dashboard_div_id',     /** string dashboard html div id */
 		];
 
@@ -908,9 +919,8 @@ JS
 			}
 
 			foreach ($aStates as $sStateValue) {
-				$sHtmlValue = $aGroupBy['group1']->MakeValueLabel($this->m_oFilter, $sStateValue, $sStateValue);
-				$aStateLabels[$sStateValue] = html_entity_decode(strip_tags($sHtmlValue), ENT_QUOTES, 'UTF-8');
-
+				$oAttDef = MetaModel::GetAttributeDef($sClass, $sStateAttrCode);
+				$aStateLabels[$sStateValue] = $oAttDef->GetAsPlainText($sStateValue);
 				$aCounts[$sStateValue] = (array_key_exists($sStateValue, $aCountsQueryResults))
 					? $aCountsQueryResults[$sStateValue]
 					: 0;
@@ -1129,6 +1139,7 @@ JS
 		$oBlock->bCreateNew = false;
 		$oBlock->sLinkTarget = '';
 		$oBlock->sClass = '';
+		$oBlock->sClassLabel = '';
 		$oBlock->sParams = '';
 		$oBlock->sDefault = '';
 		$oBlock->sEventAttachedData = '';
@@ -1164,6 +1175,7 @@ JS
 			} else {
 				$oBlock->bEmptySet = true;
 				$oBlock->sClass = $this->m_oFilter->GetClass();
+				$oBlock->sClassLabel = MetaModel::GetName($oBlock->sClass);
 				$bDisplayMenu = isset($aExtraParams['menu']) ? ($aExtraParams['menu'] == true) : true;
 				if ($bDisplayMenu) {
 					if ((UserRights::IsActionAllowed($oBlock->sClass, UR_ACTION_MODIFY) == UR_ALLOWED_YES)) {

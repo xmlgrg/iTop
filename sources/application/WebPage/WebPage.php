@@ -25,6 +25,7 @@ use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 
 /**
@@ -52,11 +53,21 @@ class WebPage implements Page
 	protected $s_title;
 	protected $s_content;
 	protected $s_deferred_content;
+	/** @var array Scripts to be put in the page's header */
 	protected $a_scripts;
-	protected $a_dict_entries;
-	protected $a_dict_entries_prefixes;
-	protected $a_styles;
+	/** @var array Scripts to be executed when the DOM is ready (typical JQuery use), right before "ready scripts" */
+	protected $a_init_scripts;
+	/** @var array Scripts to be executed when the DOM is ready, with a slight delay, after the "init scripts" */
+	protected $a_ready_scripts;
+	/** @var array Scripts linked (externals) to the page through URIs */
 	protected $a_linked_scripts;
+	/** @var array Specific dictionnary entries to be used client side */
+	protected $a_dict_entries;
+	/** @var array Sub-sets of dictionary entries (based on the given prefix) for the client side */
+	protected $a_dict_entries_prefixes;
+	/** @var array Inline style to put in the page's header */
+	protected $a_styles;
+	/** @var array Stylesheets linked (external) to the page through URIs */
 	protected $a_linked_stylesheets;
 	protected $a_headers;
 	protected $a_base;
@@ -75,6 +86,8 @@ class WebPage implements Page
 	protected $oContentLayout;
 	protected $sTemplateRelPath;
 
+
+
 	/**
 	 * @var bool|string|string[]
 	 */
@@ -91,12 +104,13 @@ class WebPage implements Page
 		$this->s_title = $s_title;
 		$this->s_content = "";
 		$this->s_deferred_content = '';
-		$this->a_scripts = array();
-		$this->a_dict_entries = array();
-		$this->a_dict_entries_prefixes = array();
-		$this->a_styles = array();
-		$this->a_linked_scripts = array();
-		$this->a_linked_stylesheets = array();
+		$this->InitializeScripts();
+		$this->InitializeInitScripts();
+		$this->InitializeReadyScripts();
+		$this->InitializeLinkedScripts();
+		$this->InitializeDictEntries();
+		$this->InitializeStyles();
+		$this->InitializeLinkedStylesheets();
 		$this->a_headers = array();
 		$this->a_base = array('href' => '', 'target' => '');
 		$this->iNextId = 0;
@@ -174,7 +188,7 @@ class WebPage implements Page
 	 */
 	public function add_at_the_end($s_html, $sId = null)
 	{
-		$this->oContentLayout->AddDeferredBlock(new Html($s_html, $sId));
+		$this->AddDeferredBlock(new Html($s_html, $sId));
 	}
 
 	/**
@@ -232,8 +246,6 @@ class WebPage implements Page
 	 */
 	public function GetTable($aConfig, $aData, $aParams = array())
 	{
-		$oAppContext = new ApplicationContext();
-
 		static $iNbTables = 0;
 		$iNbTables++;
 		$sHtml = "";
@@ -328,8 +340,47 @@ class WebPage implements Page
 	}
 
 	/**
+	 * Add a UIBlock in the page at the end by dispatching its parts in the right places (CSS, JS, HTML)
+	 *
+	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
+	 *
+	 * @return \Combodo\iTop\Application\UI\Base\iUIBlock block added
+	 * @since 3.0.0
+	 */
+	public function AddDeferredBlock(iUIBlock $oBlock): ?iUIBlock
+	{
+		$this->oContentLayout->AddDeferredBlock($oBlock);
+		return $oBlock;
+	}
+
+	/**
+	 * Empty all base JS in the page's header
+	 *
+	 * @uses \WebPage::$a_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyScripts(): void
+	{
+		$this->a_scripts = [];
+	}
+
+	/**
+	 * Initialize base JS in the page's header
+	 *
+	 * @uses \WebPage::$a_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeScripts(): void
+	{
+		$this->EmptyScripts();
+	}
+
+	/**
 	 * Add some Javascript to the header of the page
 	 *
+	 * @uses \WebPage::$a_scripts
 	 * @param string $s_script
 	 */
 	public function add_script($s_script)
@@ -340,13 +391,145 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add some Javascript to the header of the page
+	 * Empty all base init. scripts for the page
 	 *
-	 * @param $s_script
+	 * @uses \WebPage::$a_init_scripts
+	 * @return void
+	 * @since 3.0.0
 	 */
-	public function add_ready_script($s_script)
+	protected function EmptyInitScripts(): void
 	{
-		// Do nothing silently... this is not supported by this type of page...
+		$this->a_init_scripts = [];
+	}
+
+	/**
+	 * Initialize base init. scripts for the page
+	 *
+	 * @uses \WebPage::$a_init_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeInitScripts(): void
+	{
+		$this->EmptyInitScripts();
+	}
+
+	/**
+	 * Adds a script to be executed when the DOM is ready (typical JQuery use), right before add_ready_script
+	 *
+	 * @uses \WebPage::$a_init_scripts
+	 * @param string $sScript
+	 *
+	 * @return void
+	 */
+	public function add_init_script($sScript)
+	{
+		if (!empty(trim($sScript))) {
+			$this->a_init_scripts[] = $sScript;
+		}
+	}
+
+	/**
+	 * Empty all base ready scripts for the page
+	 *
+	 * @uses \WebPage::$a_ready_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyReadyScripts(): void
+	{
+		$this->a_ready_scripts = [];
+	}
+
+	/**
+	 * Initialize base ready scripts for the page
+	 *
+	 * @uses \WebPage::$a_reset_init_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeReadyScripts(): void
+	{
+		$this->EmptyReadyScripts();
+	}
+
+	/**
+	 * Add some Javascript to be executed once the DOM is ready, slightly after the "init scripts"
+	 *
+	 * @uses \WebPage::$a_ready_scripts
+	 * @param $sScript
+	 */
+	public function add_ready_script($sScript)
+	{
+		if (!empty(trim($sScript))) {
+			$this->a_ready_scripts[] = $sScript;
+		}
+	}
+
+	/**
+	 * Empty all base linked scripts for the page
+	 *
+	 * @uses \WebPage::$a_linked_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyLinkedScripts(): void
+	{
+		$this->a_linked_scripts = [];
+	}
+
+	/**
+	 * Initialize base linked scripts for the page
+	 *
+	 * @uses \WebPage::$a_linked_scripts
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedScripts(): void
+	{
+		$this->EmptyLinkedScripts();
+	}
+
+	/**
+	 * Add a script (as an include, i.e. link) to the header of the page.<br>
+	 * Handles duplicates : calling twice with the same script will add the script only once
+	 *
+	 * @uses \WebPage::$a_linked_scripts
+	 * @param string $s_linked_script
+	 * @return void
+	 */
+	public function add_linked_script($s_linked_script)
+	{
+		if (!empty(trim($s_linked_script))) {
+			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
+		}
+	}
+
+	/**
+	 * Empty both dict. entries and dict. entries prefixes for the page
+	 *
+	 * @uses \WebPage::$a_dict_entries
+	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyDictEntries(): void
+	{
+		$this->a_dict_entries = [];
+		$this->a_dict_entries_prefixes = [];
+	}
+
+	/**
+	 * Initialize both dict. entries and dict. entries prefixes for the page
+	 *
+	 * @uses \WebPage::$a_dict_entries
+	 * @uses \WebPage::$dict_a_dict_entries_prefixes
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeDictEntries(): void
+	{
+		$this->EmptyDictEntries();
 	}
 
 	/**
@@ -354,6 +537,7 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entryId a translation label key
 	 *
+	 * @uses \WebPage::$a_dict_entries
 	 * @see \WebPage::add_dict_entries()
 	 * @see utils.js
 	 */
@@ -367,6 +551,7 @@ class WebPage implements Page
 	 *
 	 * @param string $s_entriesPrefix translation label prefix (eg 'UI:Button:' to add all keys beginning with this)
 	 *
+	 * @see \WebPage::::$dict_a_dict_entries_prefixes
 	 * @see \WebPage::add_dict_entry()
 	 * @see utils.js
 	 */
@@ -403,6 +588,29 @@ class WebPage implements Page
 		return $sJSFile;
 	}
 
+	/**
+	 * Empty all inline styles for the page
+	 *
+	 * @uses \WebPage::$a_styles
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function EmptyStyles(): void
+	{
+		$this->a_styles = [];
+	}
+
+	/**
+	 * Initialize inline styles for the page
+	 *
+	 * @uses \WebPage::$a_styles
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeStyles(): void
+	{
+		$this->EmptyStyles();
+	}
 
 	/**
 	 * Add some CSS definitions to the header of the page
@@ -417,17 +625,27 @@ class WebPage implements Page
 	}
 
 	/**
-	 * Add a script (as an include, i.e. link) to the header of the page.<br>
-	 * Handles duplicates : calling twice with the same script will add the script only once
+	 * Empty all linked stylesheets for the page
 	 *
-	 * @param string $s_linked_script
+	 * @uses \WebPage::$a_linked_stylesheets
 	 * @return void
+	 * @since 3.0.0
 	 */
-	public function add_linked_script($s_linked_script)
+	protected function EmptyLinkedStylesheets(): void
 	{
-		if (!empty(trim($s_linked_script))) {
-			$this->a_linked_scripts[$s_linked_script] = $s_linked_script;
-		}
+		$this->a_linked_stylesheets = [];
+	}
+
+	/**
+	 * Initialize linked stylesheets for the page
+	 *
+	 * @uses \WebPage::$a_linked_stylesheets
+	 * @return void
+	 * @since 3.0.0
+	 */
+	protected function InitializeLinkedStylesheets(): void
+	{
+		$this->EmptyLinkedStylesheets();
 	}
 
 	/**
@@ -583,18 +801,18 @@ class WebPage implements Page
 			// - Value raw
 			$sDataValueRaw = isset($aAttrib['value_raw']) ? 'data-value-raw="'.utils::HtmlEntities($aAttrib['value_raw']).'"' : '';
 
-			$sHtml .= "<div class=\"field_container field_{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw>\n";
-			$sHtml .= "<div class=\"field_label label\">{$aAttrib['label']}</div>\n";
+			$sHtml .= "<div class=\"ibo-field ibo-field-{$sLayout}\" $sDataAttributeCode $sDataAttributeType $sDataAttributeLabel $sDataAttributeFlags $sDataValueRaw>\n";
+			$sHtml .= "<div class=\"ibo-field--label\">{$aAttrib['label']}</div>\n";
 
 			$sHtml .= "<div class=\"field_data\">\n";
 			// By Rom, for csv import, proposed to show several values for column selection
 			if (is_array($aAttrib['value']))
 			{
-				$sHtml .= "<div class=\"field_value\">".implode("</div><div>", $aAttrib['value'])."</div>\n";
+				$sHtml .= "<div class=\"ibo-field--value\">".implode("</div><div>", $aAttrib['value'])."</div>\n";
 			}
 			else
 			{
-				$sHtml .= "<div class=\"field_value\">".$aAttrib['value']."</div>\n";
+				$sHtml .= "<div class=\"ibo-field--value\">".$aAttrib['value']."</div>\n";
 			}
 			// Checking if we should add comments & infos
 			$sComment = (isset($aAttrib['comments'])) ? $aAttrib['comments'] : '';
@@ -721,31 +939,6 @@ class WebPage implements Page
 		return $sOutput;
 	}
 
-	/**
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
-	 *
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 */
-	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
-	{
-		$oBlockRenderer = new BlockRenderer($oBlock);
-		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
-		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
-
-		$this->add_style($oBlockRenderer->RenderCssInline());
-
-		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
-		}
-
-		foreach ($oBlock->GetDeferredBlocks() as $oSubBlock) {
-			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
-		}
-	}
-
 	public function GetDeferredBlocks(iUIBlock $oBlock): array
 	{
 		$aDeferredBlocks = $oBlock->GetDeferredBlocks();
@@ -775,17 +968,7 @@ class WebPage implements Page
 		$aData['oLayout'] = $this->oContentLayout;
 		$aData['aDeferredBlocks'] = $this->GetDeferredBlocks($this->oContentLayout);
 
-		// CSS files
-		foreach ($this->oContentLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$this->add_linked_stylesheet($sFileAbsUrl);
-		}
-		// JS files
-		foreach ($this->oContentLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$this->add_linked_script($sFileAbsUrl);
-		}
-
-		// Inline Templates
-		$this->RenderInlineScriptsAndCSSRecursively($this->oContentLayout);
+		ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
 
 		// Base structure of data to pass to the TWIG template
 		$aData['aPage'] = [
@@ -799,6 +982,9 @@ class WebPage implements Page
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
+			'aJsInlineOnDomReady' => $this->a_ready_scripts,
+			'aJsInlineOnInit' => $this->a_init_scripts,
+
 			// TODO 3.0.0: TEMP, used while developing, remove it.
 			'sCapturedOutput' => utils::FilterXSS($s_captured_output),
 			'sDeferredContent' => utils::FilterXSS($this->s_deferred_content),
@@ -1100,6 +1286,8 @@ class WebPage implements Page
 
 
 	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * Adds init scripts for the collapsible sections
 	 */
 	protected function outputCollapsibleSectionInit()
@@ -1131,9 +1319,12 @@ EOD
 	}
 
 	/**
-	 * @param string $sSectionLabel
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * @param bool $bOpenedByDefault
 	 * @param string $sSectionStateStorageBusinessKey
+	 *
+	 * @param string $sSectionLabel
 	 *
 	 * @throws \Exception
 	 */
@@ -1143,11 +1334,14 @@ EOD
 	}
 
 	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * @param string $sSectionLabel
 	 * @param bool $bOpenedByDefault
 	 * @param string $sSectionStateStorageBusinessKey
 	 *
 	 * @return string
+	 *
 	 * @throws \Exception
 	 */
 	public function GetStartCollapsibleSection($sSectionLabel, $bOpenedByDefault = false, $sSectionStateStorageBusinessKey = '')
@@ -1169,12 +1363,17 @@ EOD
 		return $sHtml;
 	}
 
+	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 */
 	public function EndCollapsibleSection()
 	{
 		$this->add($this->GetEndCollapsibleSection());
 	}
 
 	/**
+	 * @deprecated 3.0.0 use {@link \Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection}
+	 *
 	 * @return string
 	 */
 	public function GetEndCollapsibleSection()

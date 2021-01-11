@@ -8,6 +8,7 @@ use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Renderer\BlockRenderer;
+use Combodo\iTop\Renderer\Console\ConsoleBlockRenderer;
 
 class AjaxPage extends WebPage implements iTabbedPage
 {
@@ -16,7 +17,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 	 *
 	 * @var array
 	 */
-	protected $m_aReadyScripts;
 	protected $m_oTabs;
 	private $m_sMenu; // If set, then the menu will be updated
 	const DEFAULT_PAGE_TEMPLATE_REL_PATH = 'pages/backoffice/ajaxpage/layout';
@@ -32,7 +32,6 @@ class AjaxPage extends WebPage implements iTabbedPage
 		$bPrintable = ($sPrintable == '1');
 
 		parent::__construct($s_title, $bPrintable);
-		$this->m_aReadyScripts = [];
 		//$this->add_header("Content-type: text/html; charset=utf-8");
 		$this->no_cache();
 		$this->add_xframe_options();
@@ -149,14 +148,7 @@ class AjaxPage extends WebPage implements iTabbedPage
 			header($s_header);
 		}
 
-		// CSS files
-		foreach ($this->oContentLayout->GetCssFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$this->add_linked_stylesheet($sFileAbsUrl);
-		}
-		// JS files
-		foreach ($this->oContentLayout->GetJsFilesUrlRecursively(true) as $sFileAbsUrl) {
-			$this->add_linked_script($sFileAbsUrl);
-		}
+		ConsoleBlockRenderer::AddCssJsToPage($this, $this->oContentLayout);
 
 		// Render the blocks
 		// Additional UI widgets to be activated inside the ajax fragment
@@ -171,9 +163,6 @@ EOF
 			);
 		}
 		$this->outputCollapsibleSectionInit();
-
-		$this->RenderInlineScriptsAndCSSRecursively($this->oContentLayout);
-
 
 		$aData = [];
 		$aData['oLayout'] = $this->oContentLayout;
@@ -190,7 +179,8 @@ EOF
 			'aCssInline' => $this->a_styles,
 			'aJsFiles' => $this->a_linked_scripts,
 			'aJsInlineLive' => $this->a_scripts,
-			'aJsInlineOnDomReady' => $this->m_aReadyScripts,
+			'aJsInlineOnDomReady' => $this->a_ready_scripts,
+			'aJsInlineOnInit' => $this->a_init_scripts,
 			'bEscapeContent' => ($this->sContentType == 'text/html') && ($this->sContentDisposition == 'inline'),
 			// TODO 3.0.0: TEMP, used while developping, remove it.
 			'sSanitizedContent' => utils::FilterXSS($this->s_content),
@@ -355,36 +345,6 @@ EOF
 			$this->add_script("$('#{$sId}').remove();"); // Remove any previous instance of the same Id
 		}
 		$this->s_deferred_content .= $s_html;
-	}
-
-	/**
-	 * @param \Combodo\iTop\Application\UI\Base\iUIBlock $oBlock
-	 *
-	 * @throws \ReflectionException
-	 * @throws \Twig\Error\LoaderError
-	 * @throws \Twig\Error\RuntimeError
-	 * @throws \Twig\Error\SyntaxError
-	 */
-	public function RenderInlineScriptsAndCSSRecursively(iUIBlock $oBlock): void
-	{
-		$oBlockRenderer = new BlockRenderer($oBlock);
-		$this->add_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_LIVE));
-		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_INIT));
-		$this->add_ready_script($oBlockRenderer->RenderJsInline(iUIBlock::JS_TYPE_ON_READY));
-		$this->add_style($oBlockRenderer->RenderCssInline());
-
-		foreach ($oBlock->GetSubBlocks() as $oSubBlock) {
-			$this->RenderInlineScriptsAndCSSRecursively($oSubBlock);
-		}
-	}
-	/**
-	 * @inheritDoc
-	 */
-	public function add_ready_script($sScript)
-	{
-		if (!empty(trim($sScript))) {
-			$this->m_aReadyScripts[] = $sScript;
-		}
 	}
 
 	/**

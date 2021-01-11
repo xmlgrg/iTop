@@ -21,10 +21,13 @@
 						<attribute id="ref"/>
 					</attributes>
 				</naming>
-                <fields_semantic>
-                    <state_attribute>status</state_attribute>
-                </fields_semantic>
-				<icon>images/user-request.png</icon>
+				<fields_semantic>
+					<state_attribute>status</state_attribute>
+				</fields_semantic>
+				<style>
+					<icon>images/user-request.png</icon>
+					<main_color>red</main_color>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ref"/>
@@ -40,24 +43,101 @@
 				<field id="status" xsi:type="AttributeEnum">
 					<always_load_in_tables>true</always_load_in_tables>
 					<values>
-						<value id="new">new</value>
-						<value id="waiting_for_approval">waiting_for_approval</value>
-						<value id="approved">approved</value>
-						<value id="rejected">rejected</value>
-						<value id="assigned">assigned</value>
-						<value id="pending">pending</value>
-						<value id="escalated_tto">escalated_tto</value>
-						<value id="escalated_ttr">escalated_ttr</value>
-						<value id="resolved">resolved</value>
-						<value id="closed">closed</value>
+						<value id="new">
+							<code>new</code>
+							<style>
+								<main_color>#2C5382</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="waiting_for_approval">
+							<code>waiting_for_approval</code>
+							<style>
+								<main_color>#F6AE55</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-hourglass-half</decoration_classes>
+							</style>
+						</value>
+						<value id="approved">
+							<code>approved</code>
+							<style>
+								<main_color>#689F38</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-user-check</decoration_classes>
+							</style>
+						</value>
+						<value id="rejected">
+							<code>rejected</code>
+							<style>
+								<main_color>#B83280</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-user-times</decoration_classes>
+							</style>
+						</value>
+						<value id="assigned">
+							<code>assigned</code>
+							<style>
+								<main_color>#2C5382</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="pending">
+							<code>pending</code>
+							<style>
+								<main_color>#F6AE55</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-hourglass-half</decoration_classes>
+							</style>
+						</value>
+						<value id="escalated_tto">
+							<code>escalated_tto</code>
+							<style>
+								<main_color>#B83280</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-fire</decoration_classes>
+							</style>
+						</value>
+						<value id="escalated_ttr">
+							<code>escalated_ttr</code>
+							<style>
+								<main_color>#B83280</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-fire</decoration_classes>
+							</style>
+						</value>
+						<value id="resolved">
+							<code>resolved</code>
+							<style>
+								<main_color>#689F38</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes>fas fa-check</decoration_classes>
+							</style>
+						</value>
+						<value id="closed">
+							<code>closed</code>
+							<style>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
+					<default_style>
+						<main_color>#2B6CB0</main_color>
+						<complementary_color>#FFFFFF</complementary_color>
+						<decoration_classes/>
+					</default_style>
 					<sql>status</sql>
 					<default_value>new</default_value>
 					<is_null_allowed>false</is_null_allowed>
 				</field>
 				<field id="request_type" xsi:type="AttributeEnum">
 					<values>
-						<value id="service_request">service_request</value>
+						<value id="service_request">
+							<code>service_request</code>
+						</value>
 					</values>
 					<sql>request_type</sql>
 					<default_value>service_request</default_value>
@@ -66,9 +146,15 @@
 				</field>
 				<field id="impact" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
+						<value id="1">
+							<code>1</code>
+						</value>
+						<value id="2">
+							<code>2</code>
+						</value>
+						<value id="3">
+							<code>3</code>
+						</value>
 					</values>
 					<sql>impact</sql>
 					<default_value>1</default_value>
@@ -77,10 +163,18 @@
 				</field>
 				<field id="priority" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
-						<value id="4">4</value>
+						<value id="1">
+							<code>1</code>
+						</value>
+						<value id="2">
+							<code>2</code>
+						</value>
+						<value id="3">
+							<code>3</code>
+						</value>
+						<value id="4">
+							<code>4</code>
+						</value>
 					</values>
 					<dependencies>
 						<attribute id="impact"/>
@@ -92,10 +186,18 @@
 				</field>
 				<field id="urgency" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
-						<value id="4">4</value>
+						<value id="1">
+							<code>1</code>
+						</value>
+						<value id="2">
+							<code>2</code>
+						</value>
+						<value id="3">
+							<code>3</code>
+						</value>
+						<value id="4">
+							<code>4</code>
+						</value>
 					</values>
 					<sql>urgency</sql>
 					<default_value>4</default_value>
@@ -103,16 +205,24 @@
 				</field>
 				<field id="origin" xsi:type="AttributeEnum">
 					<values>
-						<value id="mail">mail</value>
-						<value id="phone">phone</value>
-						<value id="portal">portal</value>
+						<value id="mail">
+							<code>mail</code>
+						</value>
+						<value id="phone">
+							<code>phone</code>
+						</value>
+						<value id="portal">
+							<code>portal</code>
+						</value>
 					</values>
 					<sql>origin</sql>
 					<default_value>phone</default_value>
 					<is_null_allowed>true</is_null_allowed>
 				</field>
 				<field id="approver_id" xsi:type="AttributeExternalKey">
-					<filter><![CDATA[SELECT Person WHERE org_id= :this->org_id]]></filter>
+					<filter><![CDATA[
+						SELECT Person WHERE org_id= :this->org_id
+						]]></filter>
 					<dependencies>
 						<attribute id="org_id"/>
 					</dependencies>
@@ -160,8 +270,12 @@
 				</field>
 				<field id="escalation_flag" xsi:type="AttributeEnum">
 					<values>
-						<value id="yes">yes</value>
-						<value id="no">no</value>
+						<value id="yes">
+							<code>yes</code>
+						</value>
+						<value id="no">
+							<code>no</code>
+						</value>
 					</values>
 					<sql>escalation_flag</sql>
 					<default_value>no</default_value>
@@ -297,10 +411,16 @@
 				</field>
 				<field id="resolution_code" xsi:type="AttributeEnum">
 					<values>
-						<value id="assistance">assistance</value>
-						<value id="other">other</value>
+						<value id="assistance">
+							<code>assistance</code>
+						</value>
+						<value id="other">
+							<code>other</code>
+						</value>
 						<value id="software patch">software patch</value>
-						<value id="training">training</value>
+						<value id="training">
+							<code>training</code>
+						</value>
 						<value id="hardware repair">hardware repair</value>
 						<value id="system update">system update</value>
 						<value id="bug fixed">bug fixed</value>
@@ -378,10 +498,18 @@
 				</field>
 				<field id="user_satisfaction" xsi:type="AttributeEnum">
 					<values>
-						<value id="1">1</value>
-						<value id="2">2</value>
-						<value id="3">3</value>
-						<value id="4">4</value>
+						<value id="1">
+							<code>1</code>
+						</value>
+						<value id="2">
+							<code>2</code>
+						</value>
+						<value id="3">
+							<code>3</code>
+						</value>
+						<value id="4">
+							<code>4</code>
+						</value>
 					</values>
 					<sql>user_satisfaction</sql>
 					<default_value>1</default_value>
@@ -398,17 +526,23 @@
 					<item id="warning">
 						<rank>1</rank>
 						<color>HIGHLIGHT_CLASS_WARNING</color>
-						<icon>images/user-request-deadline.png</icon>
+						<style>
+							<icon>images/user-request-deadline.png</icon>
+						</style>
 					</item>
 					<item id="critical">
 						<rank>2</rank>
 						<color>HIGHLIGHT_CLASS_CRITICAL</color>
-						<icon>images/user-request-escalated.png</icon>
+						<style>
+							<icon>images/user-request-escalated.png</icon>
+						</style>
 					</item>
 					<item id="closed">
 						<rank>3</rank>
 						<color>HIGHLIGHT_CLASS_NONE</color>
-						<icon>images/user-request-closed.png</icon>
+						<style>
+							<icon>images/user-request-closed.png</icon>
+						</style>
 					</item>
 				</highlight_scale>
 				<stimuli>
@@ -1733,19 +1867,21 @@
                               </dashlets>
                             </cell>
 							<cell id="1" _delta="define">
-                              <rank>10</rank>
-                              <dashlets>
-                                <dashlet id="9" xsi:type="DashletHeaderDynamic">
-                                  <rank>0</rank>
-                                  <title>Organization:Overview:UserRequests</title>
-                                  <icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-                                  <subtitle>Menu:UserRequest:OpenRequests</subtitle>
-                                  <query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
-                                  <group_by>status</group_by>
-                                  <values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
-                                </dashlet>
-                              </dashlets>
-                            </cell>
+								<rank>10</rank>
+								<dashlets>
+									<dashlet id="9" xsi:type="DashletHeaderDynamic">
+										<rank>0</rank>
+										<title>Organization:Overview:UserRequests</title>
+										<style>
+											<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+										</style>
+										<subtitle>Menu:UserRequest:OpenRequests</subtitle>
+										<query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
+										<group_by>status</group_by>
+										<values>new,assigned,escalated_tto,escalated_ttr,resolved</values>
+									</dashlet>
+								</dashlets>
+							</cell>
 							<cell id="3" _delta="define">
                               <rank>30</rank>
                               <dashlets>
@@ -1785,7 +1921,9 @@
 							<dashlet id="11" xsi:type="DashletHeaderDynamic">
 								<rank>0</rank>
 								<title>Menu:RequestManagement</title>
-								<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+								<style>
+									<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
+								</style>
 								<subtitle>Menu:UserRequest:OpenRequests</subtitle>
 								<query>SELECT UserRequest WHERE status != "closed"</query>
 								<group_by>status</group_by>

@@ -17,10 +17,13 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
+use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -30,6 +33,10 @@ require_once(APPROOT.'/application/loginwebpage.class.inc.php');
 LoginWebPage::DoLogin(); // Check user rights and prompt if needed
 ApplicationMenu::CheckMenuIdEnabled('RunQueriesMenu');
 
+/**
+ * @param WebPage $oP
+ * @param string $sExpression
+ */
 function ShowExamples($oP, $sExpression)
 {
 	$bUsingExample = false;
@@ -79,16 +86,22 @@ function ShowExamples($oP, $sExpression)
 		}
 	}
 	$aDisplayConfig = array();
-	$aDisplayConfig['desc'] = array('label' => Dict::S('UI:RunQuery:HeaderPurpose'), 'description' => Dict::S('UI:RunQuery:HeaderPurpose+'));
-	$aDisplayConfig['oql'] = array('label' => Dict::S('UI:RunQuery:HeaderOQLExpression'), 'description' => Dict::S('UI:RunQuery:HeaderOQLExpression+'));
+	$aDisplayConfig['desc'] = array(
+		'label' => Dict::S('UI:RunQuery:HeaderPurpose'),
+		'description' => Dict::S('UI:RunQuery:HeaderPurpose+'),
+	);
+	$aDisplayConfig['oql'] = array(
+		'label' => Dict::S('UI:RunQuery:HeaderOQLExpression'),
+		'description' => Dict::S('UI:RunQuery:HeaderOQLExpression+'),
+	);
 	$aDisplayConfig['go'] = array('label' => '', 'description' => '');
 
-	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData)
-	{
+	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData) {
 		$bShowOpened = $bUsingExample;
-		$oP->StartCollapsibleSection($sTopic, $bShowOpened);
-		$oP->table($aDisplayConfig, $aQueriesDisplayData);
-		$oP->EndCollapsibleSection();
+		$sTopicHtml = $oP->GetTable($aDisplayConfig, $aQueriesDisplayData);
+		$oTopicSection = new CollapsibleSection($sTopic, [new Html($sTopicHtml)]);
+		$oTopicSection->SetOpenedByDefault($bShowOpened);
+		$oP->AddUiBlock($oTopicSection);
 	}
 }
 
@@ -106,8 +119,7 @@ ShowExamples($oP, $sExpression);
 
 try
 {
-	if ($sEncoding == 'crypted')
-	{
+	if ($sEncoding == 'crypted') {
 		// Translate $sExpression into a oql expression
 		$sClearText = base64_decode($sExpression);
 		echo "<strong>FYI: '$sClearText'</strong><br/>\n";
@@ -160,14 +172,11 @@ try
 	$oHiddenParams = new Html($oAppContext->GetForForm());
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
-	$oQueryTextarea = InputFactory::MakeForTextareaWithLabel(
-		'expression',
-		Dict::S('UI:RunQuery:ExpressionToEvaluate'),
-		'expression',
-		utils::HtmlEntities($sExpression),
-		120, 8
-	);
-	$oQueryForm->AddSubBlock($oQueryTextarea);
+	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
+	$oQueryForm->AddSubBlock($oQueryTitle);
+	$oQueryTextArea = new TextArea(utils::HtmlEntities($sExpression), 'expression', 120, 8);
+	$oQueryTextArea->SetName('expression');
+	$oQueryForm->AddSubBlock($oQueryTextArea);
 
 	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(
 		Dict::S('UI:Button:Evaluate'),
@@ -188,7 +197,7 @@ EOF
 
 	if (count($aArgs) > 0) {
 		$oP->add("<div class=\"wizContainer\">\n");
-		$oP->add("<h3>Query arguments</h3>\n");
+		$oP->add("<h2>Query arguments</h2>\n");
 		foreach ($aArgs as $sParam => $sValue) {
 			$oP->p("$sParam: <input type=\"string\" name=\"arg_$sParam\" value=\"$sValue\">\n");
 		}
@@ -196,7 +205,7 @@ EOF
 	}
 
 	if ($oFilter) {
-		$oP->add("<h3>Query results</h3>\n");
+		$oP->add("<h2>Query results</h2>\n");
 
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
 		$oResultBlock->Display($oP, 'runquery');
@@ -206,28 +215,30 @@ EOF
 		$sPageId = "ui-search-".$oFilter->GetClass();
 		$sLabel = MetaModel::GetName($oFilter->GetClass());
 		$aArgs = array();
-		foreach (array_merge($_POST, $_GET) as $sKey => $value)
-		{
-			if (is_array($value))
-			{
+		foreach (array_merge($_POST, $_GET) as $sKey => $value) {
+			if (is_array($value)) {
 				$aItems = array();
-				foreach($value as $sItemKey => $sItemValue)
-				{
+				foreach ($value as $sItemKey => $sItemValue) {
 					$aArgs[] = $sKey.'['.$sItemKey.']='.urlencode($sItemValue);
 				}
-			}
-			else
-			{
+			} else {
 				$aArgs[] = $sKey.'='.urlencode($value);
 			}
 		}
 		$sUrl = utils::GetAbsoluteUrlAppRoot().'pages/run_query.php?'.implode('&', $aArgs);
-		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal', iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
+		$oP->SetBreadCrumbEntry($sPageId, $sLabel, $oFilter->ToOQL(true), $sUrl, 'fas fa-terminal',
+			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
-		$oP->p('');
-		$oP->StartCollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), false, 'runQuery');
-		$oP->p(Dict::S('UI:RunQuery:DevelopedQuery').htmlentities($oFilter->ToOQL(), ENT_QUOTES, 'UTF-8'));
-		$oP->p(Dict::S('UI:RunQuery:SerializedFilter').htmlentities($oFilter->serialize(), ENT_QUOTES, 'UTF-8'));
+
+		$aMoreInfoBlocks = [];
+
+		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
+		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->ToOQL()).'</pre>'));
+		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
+
+		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
+		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->serialize()).'</pre>'));
+		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 
 		$aModifierProperties = MetaModel::MakeModifierProperties($oFilter);
@@ -235,90 +246,90 @@ EOF
 		// Avoid adding all the fields for counts or "group by" requests
 		$aCountAttToLoad = array();
 		$sMainClass = null;
-		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass)
-		{
+		foreach ($oFilter->GetSelectedClasses() as $sClassAlias => $sClass) {
 			$aCountAttToLoad[$sClassAlias] = array();
-			if (empty($sMainClass))
-			{
+			if (empty($sMainClass)) {
 				$sMainClass = $sClass;
 			}
 		}
 
 		$aOrderBy = MetaModel::GetOrderByDefault($sMainClass);
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
-		{
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
 			// OQL Developed for Count
-			$oP->p('');
-			$oP->p(Dict::S('UI:RunQuery:DevelopedOQLCount'));
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties, null, null, null, $aCountAttToLoad);
-			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+			$oCountDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQLCount'));
+			$oCountDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$aMoreInfoBlocks[] = $oCountDevelopedQuerySet;
 		}
-		
-		// SQL Count
-		$oP->p('');
-		$oP->p(Dict::S('UI:RunQuery:ResultSQLCount'));
-		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
-		$oP->p("<pre>$sSQL</pre>");
 
-		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch'))
-		{
+		// SQL Count
+		$sSQL = $oFilter->MakeSelectQuery(array(), $aRealArgs, $aCountAttToLoad, null, 0, 0, true);
+		$oCountResultQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQLCount'));
+		$oCountResultQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$aMoreInfoBlocks[] = $oCountResultQuerySet;
+
+		if (($oFilter instanceof DBObjectSearch) && !MetaModel::GetConfig()->Get('use_legacy_dbsearch')) {
 			// OQL Developed
-			$oP->p('');
-			$oP->p(Dict::S('UI:RunQuery:DevelopedOQL'));
 			$oSQLObjectQueryBuilder = new SQLObjectQueryBuilder($oFilter);
 			$oBuild = new QueryBuilderContext($oFilter, $aModifierProperties);
-			$oP->p('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>');
+			$oOqlDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedOQL'));
+			$oOqlDevelopedQuerySet->AddSubBlock(new Html('<pre>'.$oSQLObjectQueryBuilder->DebugOQLClassTree($oBuild).'</pre>'));
+			$aMoreInfoBlocks[] = $oOqlDevelopedQuerySet;
 		}
 
 		// SQL
-		$oP->p('');
-		$oP->p(Dict::S('UI:RunQuery:ResultSQL'));
 		$sSQL = $oFilter->MakeSelectQuery($aOrderBy, $aRealArgs, null, null, 0, 0, false);
-		$oP->p("<pre>$sSQL</pre>");
+		$oSqlQuerySet = new FieldSet(Dict::S('UI:RunQuery:ResultSQL'));
+		$oSqlQuerySet->AddSubBlock(new Html('<pre>'.$sSQL.'</pre>'));
+		$aMoreInfoBlocks[] = $oSqlQuerySet;
 
-		$oP->EndCollapsibleSection();
-	}
-	elseif ($sSyntaxError)
-	{
-		if ($e instanceof OqlException)
-		{
+		$oMoreInfoSection = new CollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), $aMoreInfoBlocks);
+		$oP->AddUiBlock($oMoreInfoSection);
+	} elseif ($sSyntaxError) {
+		if ($e instanceof OqlException) {
 			$sWrongWord = $e->GetWrongWord();
 			$aSuggestedWords = $e->GetSuggestions();
-			if (is_array($aSuggestedWords) && count($aSuggestedWords) > 0)
-			{
+			if (is_array($aSuggestedWords) && count($aSuggestedWords) > 0) {
 				$sSuggestedWord = OqlException::FindClosestString($sWrongWord, $aSuggestedWords);
 
-				if (strlen($sSuggestedWord) > 0)
-				{
-					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->GetIssue().' <em>'.$sWrongWord).'</em></b>');
+				if (strlen($sSuggestedWord) > 0) {
+					$sSyntaxErrorText = $e->GetIssue().'<br><em>'.$sWrongWord.'</em>';
 					$sBefore = substr($sExpression, 0, $e->GetColumn());
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
 					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
-					$oP->p("Suggesting: $sFixedExpressionHtml");
-					$oP->add('<button onClick="$(\'textarea[name=expression]\').val(\''.htmlentities(addslashes($sFixedExpression)).'\');">Use this query</button>');
+					$sSyntaxErrorText .= $oP->GetP("Suggesting: $sFixedExpressionHtml");
+					$sEscapedExpression = utils::HtmlEntities(addslashes($sFixedExpression));
+					$sSyntaxErrorText .= $oP->GetP(<<<HTML
+<button onClick="$('textarea[name=expression]')
+	.val('$sEscapedExpression')
+	.focus();">Use this query</button>
+HTML
+					);
+				} else {
+					$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
 				}
-				else
-				{
-					$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
-				}
+			} else {
+				$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
 			}
-			else
-			{
-				$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getHtmlDesc()).'</b>');
-			}
+		} else {
+			$sSyntaxErrorText = $oP->GetP($e->getMessage());
 		}
-		else
-		{
-			$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
-		}
+
+		$oSyntaxErrorPanel = AlertFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'), $sSyntaxErrorText);
+		$oSyntaxErrorPanel->SetOpenedByDefault(true);
+		$oP->AddUiBlock($oSyntaxErrorPanel);
 	}
 }
-catch(Exception $e)
-{
-	$oP->p('<b>'.Dict::Format('UI:RunQuery:Error', $e->getMessage()).'</b>');
+catch (Exception $e) {
+	$oErrorAlert = AlertFactory::MakeForFailure(
+		Dict::Format('UI:RunQuery:Error', $e->getMessage()),
+		'<pre>'.$e->getTraceAsString().'</pre>'
+	);
+	$oErrorAlert->SetOpenedByDefault(false);
+	$oP->AddUiBlock($oErrorAlert);
 }
 
 $oP->output();

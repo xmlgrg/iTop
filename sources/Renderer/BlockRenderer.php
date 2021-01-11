@@ -80,7 +80,7 @@ class BlockRenderer
 	 * @throws \Twig\Error\RuntimeError
 	 * @throws \Twig\Error\SyntaxError
 	 */
-	public static function RenderBlockTemplates(iUIBlock $oBlock, array $aContextParams = [])
+	public static function RenderBlockTemplates(iUIBlock $oBlock, array $aContextParams = []): string
 	{
 		$oSelf = new static($oBlock, $aContextParams);
 

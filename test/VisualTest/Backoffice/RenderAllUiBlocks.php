@@ -24,6 +24,7 @@ namespace Combodo\iTop\Test\VisualTest\Backoffice;
 
 use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
 use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 use Combodo\iTop\Application\UI\Base\Layout\PageContent\PageContentFactory;
@@ -77,6 +78,13 @@ $oPageContentLayout->AddMainBlock(AlertFactory::MakeForDanger('Alert for danger'
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeForFailure('Alert for failure', $sContent));
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeWithBrandingPrimaryColor('Alert with branding primary color', $sContent));
 $oPageContentLayout->AddMainBlock(AlertFactory::MakeWithBrandingSecondaryColor('Alert with branding secondary color', $sContent));
+$oAlertNonClosable = AlertFactory::MakeNeutral('Alert not closable, not collapsable', $sContent)
+	->SetIsClosable(false)
+	->SetIsCollapsible(false);
+$oPageContentLayout->AddMainBlock($oAlertNonClosable);
+$oAlertSaveCollapsibleState = AlertFactory::MakeNeutral('Alert with collapsible state saving', $sContent)
+	->EnableSaveCollapsibleState('RenderAllUiBlocks-alert');
+$oPageContentLayout->AddMainBlock($oAlertSaveCollapsibleState);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
@@ -155,5 +163,19 @@ $oPageContentLayout->AddMainBlock($oPanel);
 
 $oPageContentLayout->AddMainBlock(new Html('<hr/>'));
 
+
+/////////
+// Collapsible Section
+/////////
+$oCollapsibleSectionTitle = new Html('<h2 id="title-panels">Collapsible Sections examples</h2>');
+$oPage->AddUiBlock($oCollapsibleSectionTitle);
+
+$sSectionContent = 'This is the section content !';
+$oCollapsibleSection = new CollapsibleSection('Section title', [new Html($sSectionContent)]);
+$oPage->AddUiBlock($oCollapsibleSection);
+
+$oCollapsibleSectionSaveState = new CollapsibleSection('Section save state', [new Html($sSectionContent)]);
+$oCollapsibleSectionSaveState->EnableSaveCollapsibleState('RenderAllUiBlocks-collapsible-section');
+$oPage->AddUiBlock($oCollapsibleSectionSaveState);
 
 $oPage->output();

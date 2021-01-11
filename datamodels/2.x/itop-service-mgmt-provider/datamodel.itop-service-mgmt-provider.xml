@@ -61,9 +61,11 @@
           </attributes>
         </naming>
         <fields_semantic>
-            <state_attribute>status</state_attribute>
+          <state_attribute>status</state_attribute>
         </fields_semantic>
-        <icon>images/contract.png</icon>
+        <style>
+          <icon>images/contract.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -129,8 +131,12 @@
         </field>
         <field id="cost_currency" xsi:type="AttributeEnum">
           <values>
-            <value id="dollars">dollars</value>
-            <value id="euros">euros</value>
+            <value id="dollars">
+              <code>dollars</code>
+            </value>
+            <value id="euros">
+              <code>euros</code>
+            </value>
           </values>
           <sql>cost_currency</sql>
           <default_value/>
@@ -169,9 +175,15 @@
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="production">production</value>
-            <value id="implementation">implementation</value>
-            <value id="obsolete">obsolete</value>
+            <value id="production">
+              <code>production</code>
+            </value>
+            <value id="implementation">
+              <code>implementation</code>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -397,7 +409,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/contract.png</icon>
+        <style>
+          <icon>images/contract.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -569,7 +583,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/contract.png</icon>
+        <style>
+          <icon>images/contract.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -908,9 +924,11 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <fields_semantic>
-            <image_attribute>icon</image_attribute>
+          <image_attribute>icon</image_attribute>
         </fields_semantic>
-        <icon>images/service.png</icon>
+        <style>
+          <icon>images/service.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -993,10 +1011,12 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <fields_semantic>
-            <image_attribute>icon</image_attribute>
-            <state_attribute>status</state_attribute>
+          <image_attribute>icon</image_attribute>
+          <state_attribute>status</state_attribute>
         </fields_semantic>
-        <icon>images/service.png</icon>
+        <style>
+          <icon>images/service.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1054,9 +1074,15 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="production">production</value>
-            <value id="implementation">implementation</value>
-            <value id="obsolete">obsolete</value>
+            <value id="production">
+              <code>production</code>
+            </value>
+            <value id="implementation">
+              <code>implementation</code>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -1346,9 +1372,11 @@ public function PrefillSearchForm(&$aContextParam)
           </attributes>
         </naming>
         <fields_semantic>
-            <state_attribute>status</state_attribute>
+          <state_attribute>status</state_attribute>
         </fields_semantic>
-        <icon>images/service.png</icon>
+        <style>
+          <icon>images/service.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1389,8 +1417,12 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="request_type" xsi:type="AttributeEnum">
           <values>
-            <value id="incident">incident</value>
-            <value id="service_request">service_request</value>
+            <value id="incident">
+              <code>incident</code>
+            </value>
+            <value id="service_request">
+              <code>service_request</code>
+            </value>
           </values>
           <sql>request_type</sql>
           <default_value>incident</default_value>
@@ -1399,9 +1431,15 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="status" xsi:type="AttributeEnum">
           <values>
-            <value id="production">production</value>
-            <value id="implementation">implementation</value>
-            <value id="obsolete">obsolete</value>
+            <value id="production">
+              <code>production</code>
+            </value>
+            <value id="implementation">
+              <code>implementation</code>
+            </value>
+            <value id="obsolete">
+              <code>obsolete</code>
+            </value>
           </values>
           <sql>status</sql>
           <default_value/>
@@ -1500,7 +1538,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/sla.png</icon>
+        <style>
+          <icon>images/sla.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1639,7 +1679,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/slt.png</icon>
+        <style>
+          <icon>images/slt.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>
@@ -1657,10 +1699,18 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="priority" xsi:type="AttributeEnum">
           <values>
-            <value id="1">1</value>
-            <value id="2">2</value>
-            <value id="3">3</value>
-            <value id="4">4</value>
+            <value id="1">
+              <code>1</code>
+            </value>
+            <value id="2">
+              <code>2</code>
+            </value>
+            <value id="3">
+              <code>3</code>
+            </value>
+            <value id="4">
+              <code>4</code>
+            </value>
           </values>
           <sql>priority</sql>
           <default_value/>
@@ -1669,8 +1719,12 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="request_type" xsi:type="AttributeEnum">
           <values>
-            <value id="service_request">service_request</value>
-            <value id="incident">incident</value>
+            <value id="service_request">
+              <code>service_request</code>
+            </value>
+            <value id="incident">
+              <code>incident</code>
+            </value>
           </values>
           <sql>request_type</sql>
           <default_value/>
@@ -1679,8 +1733,12 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="metric" xsi:type="AttributeEnum">
           <values>
-            <value id="tto">tto</value>
-            <value id="ttr">ttr</value>
+            <value id="tto">
+              <code>tto</code>
+            </value>
+            <value id="ttr">
+              <code>ttr</code>
+            </value>
           </values>
           <sql>metric</sql>
           <default_value/>
@@ -1694,8 +1752,12 @@ public function PrefillSearchForm(&$aContextParam)
         </field>
         <field id="unit" xsi:type="AttributeEnum">
           <values>
-            <value id="hours">hours</value>
-            <value id="minutes">minutes</value>
+            <value id="hours">
+              <code>hours</code>
+            </value>
+            <value id="minutes">
+              <code>minutes</code>
+            </value>
           </values>
           <sql>unit</sql>
           <default_value/>
@@ -2160,7 +2222,9 @@ public function PrefillSearchForm(&$aContextParam)
             <attribute id="name"/>
           </attributes>
         </naming>
-        <icon>images/service.png</icon>
+        <style>
+          <icon>images/service.png</icon>
+        </style>
         <reconciliation>
           <attributes>
             <attribute id="name"/>

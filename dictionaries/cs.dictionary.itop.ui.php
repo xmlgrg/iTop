@@ -425,7 +425,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:Treeview:ExpandAll' => 'Expand All~~',
 
 	'UI:SearchToggle' => 'Hledání',
-	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)',
+	'UI:ClickToCreateNew' => 'Nový objekt (%1$s)~~',
 	'UI:SearchFor_Class' => 'Hledat objekty třídy %1$s',
 	'UI:NoObjectToDisplay' => 'Žádný objekt k zobrazení.',
 	'UI:Error:SaveFailed' => 'The object cannot be saved :~~',
@@ -700,7 +700,7 @@ Dict::Add('CS CZ', 'Czech', 'Čeština', array(
 	'UI:RunQuery:DevelopedOQLCount' => 'Developed OQL for count~~',
 	'UI:RunQuery:ResultSQLCount' => 'Resulting SQL for count~~',
 	'UI:RunQuery:ResultSQL' => 'Resulting SQL~~',
-	'UI:RunQuery:Error' => 'Nastala chyba při provádění dotazu: %1$s',
+	'UI:RunQuery:Error' => 'Nastala chyba při provádění dotazu',
 	'UI:Query:UrlForExcel' => 'URL pro MS-Excel web queries',
 	'UI:Query:UrlV1' => 'Nebyl specifikován seznam sloupců k exportu. Bez této informace nemůže stránka <em>export-V2.php</em> provést export. Pro export všech polí použijte stránku <em>export.php</em>. Pokud však chcete udržet konzistenci v delším časovém horzontu, použijte stávající stránku a specifikujte paramter "fields".',
 	'UI:Schema:Title' => 'iTop schéma objektů',

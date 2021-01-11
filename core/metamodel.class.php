@@ -454,8 +454,10 @@ abstract class MetaModel
 		self::_check_subclass($sClass);
 
 		$sIcon = '';
-		if (array_key_exists('icon', self::$m_aClassParams[$sClass])) {
-			$sIcon = self::$m_aClassParams[$sClass]['icon'];
+		if (array_key_exists('style', self::$m_aClassParams[$sClass])) {
+			/** @var ormStyle $oStyle */
+			$oStyle = self::$m_aClassParams[$sClass]['style'];
+			$sIcon = $oStyle->GetIcon();
 		}
 		if (strlen($sIcon) == 0) {
 			$sParentClass = self::GetParentPersistentClass($sClass);
@@ -469,6 +471,29 @@ abstract class MetaModel
 		}
 
 		return $sIcon;
+	}
+
+	/**
+	 * @param string $sClass
+	 *
+	 * @return ormStyle|null
+	 * @throws \CoreException
+	 *
+	 * @since 3.0
+	 */
+	final public static function GetClassStyle($sClass)
+	{
+		self::_check_subclass($sClass);
+
+		if (array_key_exists('style', self::$m_aClassParams[$sClass])) {
+			return self::$m_aClassParams[$sClass]['style'];
+		}
+		$sParentClass = self::GetParentPersistentClass($sClass);
+		if (strlen($sParentClass) > 0) {
+			return self::GetClassStyle($sParentClass);
+		}
+
+		return null;
 	}
 
 	/**
@@ -7518,8 +7543,7 @@ abstract class MetaModel
 			$sKey = self::DBGetKey($sClass);
 			$sRootKey = self::DBGetKey($sRootClass);
 			$sRootField = self::DBGetClassField($sRootClass);
-			if ($sTable != $sRootTable)
-			{
+			if ($sTable != $sRootTable) {
 				// Copy the finalclass of the root table
 				$sRequest = "UPDATE `$sTable`,`$sRootTable` SET  `$sTable`.`$sField` = `$sRootTable`.`$sRootField` WHERE `$sTable`.`$sKey` = `$sRootTable`.`$sRootKey`";
 				$aRequests[] = $sRequest;
@@ -7527,6 +7551,26 @@ abstract class MetaModel
 		}
 
 		return $aRequests;
+	}
+
+	/**
+	 * @param string $sClass
+	 * @param string $sAttCode
+	 * @param string $sValue
+	 *
+	 * @return \ormStyle|null
+	 * @throws \Exception
+	 * @throws \CoreException
+	 */
+	public static function GetEnumStyle(string $sClass, string $sAttCode, string $sValue = ''): ?ormStyle
+	{
+		$oAttDef = self::GetAttributeDef($sClass, $sAttCode);
+		if (!$oAttDef instanceof AttributeEnum) {
+			throw new CoreException("MetaModel::GetEnumStyle() Attribute $sAttCode of class $sClass is not an AttributeEnum\n");
+		}
+
+		/** @var AttributeEnum $oAttDef */
+		return $oAttDef->GetStyle($sValue);
 	}
 }
 

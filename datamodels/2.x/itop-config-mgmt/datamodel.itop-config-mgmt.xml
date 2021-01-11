@@ -15,7 +15,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -48,9 +50,15 @@
 				</field>
 				<field id="business_criticity" xsi:type="AttributeEnum">
 					<values>
-						<value id="high">high</value>
-						<value id="medium">medium</value>
-						<value id="low">low</value>
+						<value id="high">
+							<code>high</code>
+						</value>
+						<value id="medium">
+							<code>medium</code>
+						</value>
+						<value id="low">
+							<code>low</code>
+						</value>
 					</values>
 					<sql>business_criticity</sql>
 					<default_value>low</default_value>
@@ -259,7 +267,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -298,10 +308,18 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="production">production</value>
-						<value id="implementation">implementation</value>
-						<value id="stock">stock</value>
-						<value id="obsolete">obsolete</value>
+						<value id="production">
+							<code>production</code>
+						</value>
+						<value id="implementation">
+							<code>implementation</code>
+						</value>
+						<value id="stock">
+							<code>stock</code>
+						</value>
+						<value id="obsolete">
+							<code>obsolete</code>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>production</default_value>
@@ -496,7 +514,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -662,7 +682,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -946,7 +968,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/switch.png</icon>
+				<style>
+					<icon>images/switch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1219,7 +1243,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/server.png</icon>
+				<style>
+					<icon>images/server.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1522,7 +1548,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/solution.png</icon>
+				<style>
+					<icon>images/solution.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1553,8 +1581,22 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="active">active</value>
-						<value id="inactive">inactive</value>
+						<value id="active">
+							<code>active</code>
+							<style>
+								<main_color>#689F38</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="inactive">
+							<code>inactive</code>
+							<style>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>active</default_value>
@@ -1666,7 +1708,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/business-process.png</icon>
+				<style>
+					<icon>images/business-process.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1689,8 +1733,22 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="active">active</value>
-						<value id="inactive">inactive</value>
+						<value id="active">
+							<code>active</code>
+							<style>
+								<main_color>#689F38</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="inactive">
+							<code>inactive</code>
+							<style>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>active</default_value>
@@ -1780,7 +1838,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/application.png</icon>
+				<style>
+					<icon>images/application.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -1841,8 +1901,22 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="active">active</value>
-						<value id="inactive">inactive</value>
+						<value id="active">
+							<code>active</code>
+							<style>
+								<main_color>#689F38</main_color>
+								<complementary_color>#FFFFFF</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
+						<value id="inactive">
+							<code>inactive</code>
+							<style>
+								<main_color>#E1E7EC</main_color>
+								<complementary_color>#6E7A8A</complementary_color>
+								<decoration_classes/>
+							</style>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value/>
@@ -1960,7 +2034,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/middleware.png</icon>
+				<style>
+					<icon>images/middleware.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2087,7 +2163,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/database.png</icon>
+				<style>
+					<icon>images/database.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2214,7 +2292,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/webserver.png</icon>
+				<style>
+					<icon>images/webserver.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2341,7 +2421,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/application.png</icon>
+				<style>
+					<icon>images/application.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2447,7 +2529,9 @@
 						<attribute id="system_name"/>
 					</attributes>
 				</naming>
-				<icon>images/application.png</icon>
+				<style>
+					<icon>images/application.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2552,7 +2636,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/middleware.png</icon>
+				<style>
+					<icon>images/middleware.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2669,7 +2755,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/database-schema.png</icon>
+				<style>
+					<icon>images/database-schema.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2784,7 +2872,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/webapp.png</icon>
+				<style>
+					<icon>images/webapp.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2909,7 +2999,9 @@
 						<attribute id="version"/>
 					</attributes>
 				</naming>
-				<icon>images/software.png</icon>
+				<style>
+					<icon>images/software.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -2944,11 +3036,21 @@
 				</field>
 				<field id="type" xsi:type="AttributeEnum">
 					<values>
-						<value id="Middleware">Middleware</value>
-						<value id="DBServer">DBServer</value>
-						<value id="PCSoftware">PCSoftware</value>
-						<value id="OtherSoftware">OtherSoftware</value>
-						<value id="WebServer">WebServer</value>
+						<value id="Middleware">
+							<code>Middleware</code>
+						</value>
+						<value id="DBServer">
+							<code>DBServer</code>
+						</value>
+						<value id="PCSoftware">
+							<code>PCSoftware</code>
+						</value>
+						<value id="OtherSoftware">
+							<code>OtherSoftware</code>
+						</value>
+						<value id="WebServer">
+							<code>WebServer</code>
+						</value>
 					</values>
 					<sql>type</sql>
 					<default_value/>
@@ -3065,7 +3167,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/patch.png</icon>
+				<style>
+					<icon>images/patch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3151,7 +3255,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/patch.png</icon>
+				<style>
+					<icon>images/patch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3238,7 +3344,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/patch.png</icon>
+				<style>
+					<icon>images/patch.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3325,7 +3433,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/licence.png</icon>
+				<style>
+					<icon>images/licence.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3390,8 +3500,12 @@
 				</field>
 				<field id="perpetual" xsi:type="AttributeEnum">
 					<values>
-						<value id="yes">yes</value>
-						<value id="no">no</value>
+						<value id="yes">
+							<code>yes</code>
+						</value>
+						<value id="no">
+							<code>no</code>
+						</value>
 					</values>
 					<sql>perpetual</sql>
 					<default_value>no</default_value>
@@ -3505,7 +3619,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/licence.png</icon>
+				<style>
+					<icon>images/licence.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -3642,7 +3758,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/licence.png</icon>
+				<style>
+					<icon>images/licence.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -4064,24 +4182,60 @@
 				</field>
 				<field id="type" xsi:type="AttributeEnum">
 					<values>
-						<value id="NetworkDevice">NetworkDevice</value>
-						<value id="Server">Server</value>
-						<value id="SANSwitch">SANSwitch</value>
-						<value id="StorageSystem">StorageSystem</value>
-						<value id="Rack">Rack</value>
-						<value id="Enclosure">Enclosure</value>
-						<value id="PC">PC</value>
-						<value id="Tablet">Tablet</value>
-						<value id="Phone">Phone</value>
-						<value id="MobilePhone">MobilePhone</value>
-						<value id="Printer">Printer</value>
-						<value id="DiskArray">DiskArray</value>
-						<value id="NAS">NAS</value>
-						<value id="TapeLibrary">TapeLibrary</value>
-						<value id="IPPhone">IPPhone</value>
-						<value id="Peripheral">Peripheral</value>
-						<value id="PowerSource">PowerSource</value>
-						<value id="PDU">PDU</value>
+						<value id="NetworkDevice">
+							<code>NetworkDevice</code>
+						</value>
+						<value id="Server">
+							<code>Server</code>
+						</value>
+						<value id="SANSwitch">
+							<code>SANSwitch</code>
+						</value>
+						<value id="StorageSystem">
+							<code>StorageSystem</code>
+						</value>
+						<value id="Rack">
+							<code>Rack</code>
+						</value>
+						<value id="Enclosure">
+							<code>Enclosure</code>
+						</value>
+						<value id="PC">
+							<code>PC</code>
+						</value>
+						<value id="Tablet">
+							<code>Tablet</code>
+						</value>
+						<value id="Phone">
+							<code>Phone</code>
+						</value>
+						<value id="MobilePhone">
+							<code>MobilePhone</code>
+						</value>
+						<value id="Printer">
+							<code>Printer</code>
+						</value>
+						<value id="DiskArray">
+							<code>DiskArray</code>
+						</value>
+						<value id="NAS">
+							<code>NAS</code>
+						</value>
+						<value id="TapeLibrary">
+							<code>TapeLibrary</code>
+						</value>
+						<value id="IPPhone">
+							<code>IPPhone</code>
+						</value>
+						<value id="Peripheral">
+							<code>Peripheral</code>
+						</value>
+						<value id="PowerSource">
+							<code>PowerSource</code>
+						</value>
+						<value id="PDU">
+							<code>PDU</code>
+						</value>
 					</values>
 					<sql>type</sql>
 					<default_value/>
@@ -4761,7 +4915,9 @@
 						<attribute id="ip_mask"/>
 					</attributes>
 				</naming>
-				<icon>images/subnet.png</icon>
+				<style>
+					<icon>images/subnet.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="ip"/>
@@ -4955,7 +5111,9 @@
 						<attribute id="vlan_tag"/>
 					</attributes>
 				</naming>
-				<icon>images/vlan.png</icon>
+				<style>
+					<icon>images/vlan.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="vlan_tag"/>
@@ -5157,7 +5315,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/interface.png</icon>
+				<style>
+					<icon>images/interface.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -5218,7 +5378,9 @@
 						<attribute id="name"/>
 					</attributes>
 				</naming>
-				<icon>images/interface.png</icon>
+				<style>
+					<icon>images/interface.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -5361,7 +5523,9 @@
 						<attribute id="connectableci_name"/>
 					</attributes>
 				</naming>
-				<icon>images/interface.png</icon>
+				<style>
+					<icon>images/interface.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -5611,8 +5775,12 @@
 				</field>
 				<field id="connection_type" xsi:type="AttributeEnum">
 					<values>
-						<value id="uplink">uplink</value>
-						<value id="downlink">downlink</value>
+						<value id="uplink">
+							<code>uplink</code>
+						</value>
+						<value id="downlink">
+							<code>downlink</code>
+						</value>
 					</values>
 					<sql>type</sql>
 					<default_value>downlink</default_value>
@@ -5987,7 +6155,9 @@
 				<fields_semantic>
 					<state_attribute>status</state_attribute>
 				</fields_semantic>
-				<icon>images/group.png</icon>
+				<style>
+					<icon>images/group.png</icon>
+				</style>
 				<reconciliation>
 					<attributes>
 						<attribute id="name"/>
@@ -6007,9 +6177,15 @@
 				</field>
 				<field id="status" xsi:type="AttributeEnum">
 					<values>
-						<value id="production">production</value>
-						<value id="implementation">implementation</value>
-						<value id="obsolete">obsolete</value>
+						<value id="production">
+							<code>production</code>
+						</value>
+						<value id="implementation">
+							<code>implementation</code>
+						</value>
+						<value id="obsolete">
+							<code>obsolete</code>
+						</value>
 					</values>
 					<sql>status</sql>
 					<default_value>implementation</default_value>
@@ -6379,7 +6555,9 @@
 							<dashlet id="1" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:AllDevices</title>
-								<icon>itop-config-mgmt/images/server.png</icon>
+								<style>
+									<icon>itop-config-mgmt/images/server.png</icon>
+								</style>
 								<subtitle>Menu_ConfigManagement_AllDevices</subtitle>
 							</dashlet>
 							<dashlet id="2" xsi:type="DashletBadge">
@@ -6398,7 +6576,9 @@
 							<dashlet id="4" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:SWAndApps</title>
-								<icon>itop-config-mgmt/images/application.png</icon>
+								<style>
+									<icon>itop-config-mgmt/images/application.png</icon>
+								</style>
 							</dashlet>
 							<dashlet id="5" xsi:type="DashletBadge">
 								<rank>1</rank>
@@ -6448,7 +6628,9 @@
 							<dashlet id="15" xsi:type="DashletHeaderStatic">
 								<rank>0</rank>
 								<title>Menu:ConfigManagement:Misc</title>
-								<icon>itop-config-mgmt/images/subnet.png</icon>
+								<style>
+									<icon>itop-config-mgmt/images/subnet.png</icon>
+								</style>
 							</dashlet>
 							<dashlet id="16" xsi:type="DashletBadge">
 								<rank>1</rank>

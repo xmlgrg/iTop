@@ -17,10 +17,12 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
+use Combodo\iTop\Application\UI\Base\Component\FieldBadge\FieldBadgeFactory;
 use Combodo\iTop\Form\Field\LabelField;
 use Combodo\iTop\Form\Field\TextAreaField;
 use Combodo\iTop\Form\Validator\NotEmptyExtKeyValidator;
 use Combodo\iTop\Form\Validator\Validator;
+use Combodo\iTop\Renderer\BlockRenderer;
 
 require_once('MyHelpers.class.inc.php');
 require_once('ormdocument.class.inc.php');
@@ -1112,13 +1114,13 @@ abstract class AttributeDefinition
 	}
 
 	/**
-	 * @param array $aArgs
-	 * @param string $sContains
-	 *
-	 * @return array|null
-	 * @throws \CoreException
-	 * @throws \OQLException
-	 */
+ * @param array $aArgs
+ * @param string $sContains
+ *
+ * @return array|null
+ * @throws \CoreException
+ * @throws \OQLException
+ */
 	public function GetAllowedValues($aArgs = array(), $sContains = '')
 	{
 		$oValSetDef = $this->GetValuesDef();
@@ -1128,6 +1130,20 @@ abstract class AttributeDefinition
 		}
 
 		return $oValSetDef->GetValues($aArgs, $sContains);
+	}
+
+	/**
+	 * GetAllowedValuesForSelect is the same as GetAllowedValues except for field with obsolescence flag
+	 * @param array $aArgs
+	 * @param string $sContains
+	 *
+	 * @return array|null
+	 * @throws \CoreException
+	 * @throws \OQLException
+	 */
+	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	{
+		return $this->GetAllowedValues($aArgs, $sContains);
 	}
 
 	/**
@@ -5169,12 +5185,33 @@ class AttributeEnum extends AttributeString
 	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
-		//return array_merge(parent::ListExpectedParams(), array());
+		//return array_merge(parent::ListExpectedParams(), array('styled_values'));
 	}
 
 	public function GetEditClass()
 	{
 		return "String";
+	}
+
+	/**
+	 * @param string|null $sValue
+	 *
+	 * @return \ormStyle|null
+	 */
+	public function GetStyle(?string $sValue): ?ormStyle
+	{
+		if ($this->IsParam('styled_values')) {
+			$aStyles = $this->Get('styled_values');
+			if (array_key_exists($sValue, $aStyles)) {
+				return $aStyles[$sValue];
+			}
+		}
+
+		if ($this->IsParam('default_style')) {
+			return $this->Get('default_style');
+		}
+
+		return null;
 	}
 
 	protected function GetSQLCol($bFullSpec = false)
@@ -5315,9 +5352,13 @@ class AttributeEnum extends AttributeString
 		if ($bLocalize)
 		{
 			$sLabel = $this->GetValueLabel($sValue);
-			$sDescription = $this->GetValueDescription($sValue);
+			// $sDescription = $this->GetValueDescription($sValue);
+			$oStyle = $this->GetStyle($sValue);
 			// later, we could imagine a detailed description in the title
-			$sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			// $sRes = "<span title=\"$sDescription\">".parent::GetAsHtml($sLabel)."</span>";
+			$oBadge = FieldBadgeFactory::MakeForField($sLabel, $oStyle);
+			$oRenderer = new BlockRenderer($oBadge);
+			$sRes = $oRenderer->RenderHtml();
 		}
 		else
 		{
@@ -6616,6 +6657,14 @@ class AttributeExternalKey extends AttributeDBFieldVoid
 		}
 	}
 
+	public function GetAllowedValuesForSelect($aArgs = array(), $sContains = '')
+	{
+		//$this->GetValuesDef();
+		$oValSetDef = new ValueSetObjects('SELECT '.$this->GetTargetClass());
+		return $oValSetDef->GetValuesForAutocomplete($aArgs, $sContains);
+	}
+
+
 	public function GetAllowedValuesAsObjectSet($aArgs = array(), $sContains = '', $iAdditionalValue = null)
 	{
 		$oValSetDef = $this->GetValuesDef();
@@ -7126,7 +7175,7 @@ class AttributeExternalField extends AttributeDefinition
 			return $sLabel;
 		}
 
-		if ($this->IsFriendlyName())
+		if ($this->IsFriendlyName() && ($this->Get("target_attcode") === "friendlyname"))
 		{
 			// This will be used even if we are pointing to a friendlyname in a distance > 1
 			// For example we can link to a magic friendlyname (like org_id_friendlyname)
