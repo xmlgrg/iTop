@@ -1302,23 +1302,6 @@ abstract class AttributeDefinition
 
 class AttributeDashboard extends AttributeDefinition
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(),
@@ -1395,23 +1378,6 @@ class AttributeDashboard extends AttributeDefinition
  */
 class AttributeLinkedSet extends AttributeDefinition
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(),
@@ -2244,22 +2210,6 @@ class AttributeLinkedSet extends AttributeDefinition
  */
 class AttributeLinkedSetIndirect extends AttributeLinkedSet
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -2514,23 +2464,6 @@ class AttributeInteger extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -2647,22 +2580,6 @@ class AttributeObjectKey extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -2744,23 +2661,6 @@ class AttributePercentage extends AttributeInteger
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetAsHTML($sValue, $oHostObject = null, $bLocalize = true)
 	{
 		$iWidth = 5; // Total width of the percentage bar graph, in em...
@@ -2808,23 +2708,6 @@ class AttributePercentage extends AttributeInteger
 class AttributeDecimal extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_NUMERIC;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -2948,23 +2831,6 @@ class AttributeDecimal extends AttributeDBField
 class AttributeBoolean extends AttributeInteger
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -3207,23 +3073,6 @@ class AttributeString extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return parent::ListExpectedParams();
@@ -3453,23 +3302,6 @@ class AttributeClass extends AttributeString
 class AttributeClassState extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -3798,22 +3630,6 @@ class AttributePassword extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -3999,23 +3815,6 @@ define('WIKI_OBJECT_REGEXP', '/\[\[(.+):(.+)(\|(.+))?\]\]/U');
  */
 class AttributeText extends AttributeString
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetEditClass()
 	{
 		return ($this->GetFormat() == 'text') ? 'Text' : "HTML";
@@ -4405,23 +4204,6 @@ class AttributeText extends AttributeString
  */
 class AttributeLongText extends AttributeText
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	protected function GetSQLCol($bFullSpec = false)
 	{
 		return "LONGTEXT".CMDBSource::GetSqlStringColumnDefinition();
@@ -4443,23 +4225,6 @@ class AttributeLongText extends AttributeText
 class AttributeCaseLog extends AttributeLongText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public function GetNullValue()
 	{
@@ -4857,23 +4622,6 @@ class AttributeCaseLog extends AttributeLongText
  */
 class AttributeHTML extends AttributeLongText
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetSQLColumns($bFullSpec = false)
 	{
 		$aColumns = array();
@@ -4909,23 +4657,6 @@ class AttributeHTML extends AttributeLongText
  */
 class AttributeEmailAddress extends AttributeString
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetValidationPattern()
 	{
 		return $this->GetOptional('validation_pattern', '^'.utils::GetConfig()->Get('email_validation_pattern').'$');
@@ -4956,23 +4687,6 @@ class AttributeEmailAddress extends AttributeString
  */
 class AttributeIPAddress extends AttributeString
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetValidationPattern()
 	{
 		$sNum = '(\d|[1-9]\d|1\d\d|2[0-4]\d|25[0-5])';
@@ -4994,23 +4708,6 @@ class AttributeIPAddress extends AttributeString
  */
 class AttributePhoneNumber extends AttributeString
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetValidationPattern()
 	{
 		return $this->GetOptional('validation_pattern',
@@ -5047,23 +4744,6 @@ class AttributeOQL extends AttributeText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetEditClass()
 	{
 		return "OQLExpression";
@@ -5078,23 +4758,6 @@ class AttributeOQL extends AttributeText
 class AttributeTemplateString extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 }
 
 /**
@@ -5105,23 +4768,6 @@ class AttributeTemplateString extends AttributeString
 class AttributeTemplateText extends AttributeText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 }
 
 /**
@@ -5132,23 +4778,6 @@ class AttributeTemplateText extends AttributeText
 class AttributeTemplateHTML extends AttributeText
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_STRING;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public function GetSQLColumns($bFullSpec = false)
 	{
@@ -5187,23 +4816,6 @@ class AttributeTemplateHTML extends AttributeText
 class AttributeEnum extends AttributeString
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_ENUM;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -5566,23 +5178,6 @@ class AttributeEnum extends AttributeString
  */
 class AttributeMetaEnum extends AttributeEnum
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return array('allowed_values', 'sql', 'default_value', 'mapping');
@@ -5724,23 +5319,6 @@ class AttributeDateTime extends AttributeDBField
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_DATE_TIME;
 
 	public static $oFormat = null;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	/**
 	 *
@@ -6193,23 +5771,6 @@ class AttributeDateTime extends AttributeDBField
  */
 class AttributeDuration extends AttributeInteger
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetEditClass()
 	{
 		return "Duration";
@@ -6340,23 +5901,6 @@ class AttributeDate extends AttributeDateTime
 
 	public static $oDateFormat = null;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function GetFormat()
 	{
 		if (self::$oDateFormat == null)
@@ -6441,23 +5985,6 @@ class AttributeDate extends AttributeDateTime
  */
 class AttributeDeadline extends AttributeDateTime
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetAsHTML($value, $oHostObject = null, $bLocalize = true)
 	{
 		$sResult = self::FormatDeadline($value);
@@ -6537,23 +6064,6 @@ class AttributeDeadline extends AttributeDateTime
 class AttributeExternalKey extends AttributeDBFieldVoid
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_EXTERNAL_KEY;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	/**
 	 * Return the search widget type corresponding to this attribute
@@ -6878,23 +6388,6 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 
 	protected $m_sTargetClass;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		$aParams = parent::ListExpectedParams();
@@ -7072,23 +6565,6 @@ class AttributeHierarchicalKey extends AttributeExternalKey
 class AttributeExternalField extends AttributeDefinition
 {
 	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
-	/**
 	 * Return the search widget type corresponding to this attribute
 	 *
 	 * @return string
@@ -7210,7 +6686,7 @@ class AttributeExternalField extends AttributeDefinition
 			// This will be used even if we are pointing to a friendlyname in a distance > 1
 			// For example we can link to a magic friendlyname (like org_id_friendlyname)
 			// If a specific label is needed, use a Dict key !
-			// See N°2174
+			// See N�2174
 			$sKeyAttCode = $this->Get("extkey_attcode");
 			$oExtKeyAttDef = MetaModel::GetAttributeDef($this->GetHostClass(), $sKeyAttCode);
 			$sLabel = $oExtKeyAttDef->GetLabel($this->m_sCode);
@@ -7596,23 +7072,6 @@ class AttributeExternalField extends AttributeDefinition
  */
 class AttributeURL extends AttributeString
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		//return parent::ListExpectedParams();
@@ -7693,23 +7152,6 @@ class AttributeURL extends AttributeString
 class AttributeBlob extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -8046,23 +7488,6 @@ class AttributeBlob extends AttributeDefinition
  */
 class AttributeImage extends AttributeBlob
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetEditClass()
 	{
 		return "Image";
@@ -8200,23 +7625,6 @@ class AttributeImage extends AttributeBlob
 class AttributeStopWatch extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
-
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
 
 	public static function ListExpectedParams()
 	{
@@ -9054,23 +8462,6 @@ class AttributeStopWatch extends AttributeDefinition
 class AttributeSubItem extends AttributeDefinition
 {
 	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
-	/**
      * Return the search widget type corresponding to this attribute
      * the computation is made by AttributeStopWatch::GetSubItemSearchType
      *
@@ -9317,23 +8708,6 @@ class AttributeOneWayPassword extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("depends_on"));
@@ -9533,23 +8907,6 @@ class AttributeTable extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetEditClass()
 	{
 		return "Table";
@@ -9704,23 +9061,6 @@ class AttributeTable extends AttributeDBField
 // The PHP value is a hash array, it is stored as a TEXT column
 class AttributePropertySet extends AttributeTable
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetEditClass()
 	{
 		return "PropertySet";
@@ -10269,7 +9609,7 @@ abstract class AttributeSet extends AttributeDBFieldVoid
 }
 
 /**
- * @since 2.7.0 N°985
+ * @since 2.7.0 N�985
  */
 class AttributeEnumSet extends AttributeSet
 {
@@ -10970,7 +10310,7 @@ class AttributeQueryAttCodeSet extends AttributeSet
  * Multi value list of tags
  *
  * @see TagSetFieldData
- * @since 2.6.0 N°931 tag fields
+ * @since 2.6.0 N�931 tag fields
  */
 class AttributeTagSet extends AttributeSet
 {
@@ -11882,23 +11222,6 @@ class AttributeRedundancySettings extends AttributeDBField
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return array(
@@ -12372,23 +11695,6 @@ class AttributeCustomFields extends AttributeDefinition
 {
 	const SEARCH_WIDGET_TYPE = self::SEARCH_WIDGET_TYPE_RAW;
 
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public static function ListExpectedParams()
 	{
 		return array_merge(parent::ListExpectedParams(), array("handler_class"));
@@ -12835,23 +12141,6 @@ class AttributeArchiveFlag extends AttributeBoolean
 
 class AttributeArchiveDate extends AttributeDate
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetLabel($sDefault = null)
 	{
 		$sDefault = Dict::S('Core:AttributeArchiveDate/Label', $sDefault);
@@ -12993,23 +12282,6 @@ class AttributeObsolescenceFlag extends AttributeBoolean
 
 class AttributeObsolescenceDate extends AttributeDate
 {
-	/**
-	 * Useless constructor, but if not present PHP 7.4.0/7.4.1 is crashing :( (N°2329)
-	 *
-	 * @see https://www.php.net/manual/fr/language.oop5.decon.php states that child constructor can be ommited
-	 * @see https://bugs.php.net/bug.php?id=79010 bug solved in PHP 7.4.9
-	 *
-	 * @param string $sCode
-	 * @param array $aParams
-	 *
-	 * @throws \Exception
-	 * @noinspection SenselessProxyMethodInspection
-	 */
-	public function __construct($sCode, $aParams)
-	{
-		parent::__construct($sCode, $aParams);
-	}
-
 	public function GetLabel($sDefault = null)
 	{
 		$sDefault = Dict::S('Core:AttributeObsolescenceDate/Label', $sDefault);
