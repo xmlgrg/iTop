@@ -27,6 +27,7 @@ use ErrorPage;
 use Exception;
 use IssueLog;
 use iTopWebPage;
+use Symfony\Component\HttpFoundation\IpUtils;
 use WebPage;
 use LoginWebPage;
 use MetaModel;
@@ -104,7 +105,7 @@ abstract class Controller
 	 */
 	public function InitFromModule()
 	{
-		$sModulePath = dirname(dirname($this->getDir()));
+		$sModulePath = dirname(dirname($this->GetDir()));
 		$this->SetModuleName(basename($sModulePath));
 		$this->SetViewPath($sModulePath.'/view');
 		try
@@ -139,7 +140,7 @@ abstract class Controller
 		$this->m_sModule = $sModule;
 	}
 
-	private function getDir()
+	private function GetDir()
 	{
 		return dirname((new ReflectionClass(static::class))->getFileName());
 	}
@@ -226,19 +227,31 @@ abstract class Controller
 	 *
 	 * @throws \Exception
 	 */
-	private function checkNetworkAccess($sExecModule)
+	private function CheckNetworkAccess($sExecModule)
 	{
-		$sAllowedNetworkRegexpPattern = empty($this->m_sAccessAuthorizedNetworkConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId));
-
-		if (empty($sExecModule) || empty($sAllowedNetworkRegexpPattern)){
+		if (empty($sExecModule) || empty($this->m_sAccessAuthorizedNetworkConfigParamId)){
 			return;
 		}
 
-		$sRemoteIpAddress = $_SERVER['REMOTE_ADDR'];
-		if (!preg_match("/$sAllowedNetworkRegexpPattern/", $sRemoteIpAddress)){
-			$sMsg = "'$sExecModule' page is not authorized to '$sRemoteIpAddress' ip address. only to '$sAllowedNetworkRegexpPattern' networks.";
-			IssueLog::Error($sMsg);
-			throw new Exception("Unauthorized network");
+		$aReadAllowedNetworkRegexpPatterns = MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessAuthorizedNetworkConfigParamId);
+		if (!is_array($aReadAllowedNetworkRegexpPatterns)){
+			IssueLog::Error("'$sExecModule' wrongly configured. please check $this->m_sAccessAuthorizedNetworkConfigParamId config (not an array).");
+			return;
+		} else if (empty($aReadAllowedNetworkRegexpPatterns)){
+			//no rule
+			return;
+		}
+
+		$aAllowedNetworkRegexpPatterns = [];
+
+		foreach ($aReadAllowedNetworkRegexpPatterns as $sAllowedNetworkRegexpPattern){
+			$aAllowedNetworkRegexpPatterns []= trim($sAllowedNetworkRegexpPattern);
+		}
+
+		$clientIp = $_SERVER['REMOTE_ADDR'];
+		if (!IpUtils::checkIp($clientIp, $aAllowedNetworkRegexpPatterns)){
+			IssueLog::Error("'$sExecModule' page is not authorized to '$clientIp' ip address.");
+			throw new Exception("Unauthorized network ($clientIp)");
 		}
 	}
 
@@ -253,7 +266,7 @@ abstract class Controller
 		}
 
 		$sExecModule = utils::ReadParam('exec_module', "");
-		$this->checkNetworkAccess($sExecModule);
+		$this->CheckNetworkAccess($sExecModule);
 
 		$sConfiguredAccessTokenValue = empty($this->m_sAccessTokenConfigParamId) ? "" : trim(MetaModel::GetConfig()->GetModuleSetting($sExecModule, $this->m_sAccessTokenConfigParamId));
 
@@ -321,7 +334,7 @@ abstract class Controller
 	 *
 	 * @param string $m_sAccessTokenConfigParamId
 	 */
-	public function setAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
+	public function SetAccessTokenConfigParamId(string $m_sAccessTokenConfigParamId): void
 	{
 		$this->m_sAccessTokenConfigParamId = trim($m_sAccessTokenConfigParamId) ?? "";
 	}
@@ -340,7 +353,7 @@ abstract class Controller
 	 * Otherwise an HTTP error code 500 will be returned.
 	 *
 	 */
-	public function setAccessAuthorizedNetworkConfigParamId(string $m_sAccessAuthorizedNetworkConfigParamId): void
+	public function SetAccessAuthorizedNetworkConfigParamId(string $m_sAccessAuthorizedNetworkConfigParamId): void
 	{
 		$this->m_sAccessAuthorizedNetworkConfigParamId = trim($m_sAccessAuthorizedNetworkConfigParamId) ?? "";
 	}
