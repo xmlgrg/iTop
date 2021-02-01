@@ -10,7 +10,7 @@ namespace Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm
 
 use cmdbAbstractObject;
 use Combodo\iTop\Application\UI\Base\Component\Button\Button;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuItem\PopoverMenuItemFactory;
 use Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm;
@@ -43,24 +43,12 @@ class CaseLogEntryFormFactory
 		return $oCaseLogEntryForm;
 	}
 
-	public static function MakeForActivityTab(DBObject $oObject, string $sObjectMode = cmdbAbstractObject::DEFAULT_OBJECT_MODE)
-	{
-		$oCaseLogEntryForm = new CaseLogEntryForm();
-		$oCaseLogEntryForm->SetSubmitModeFromHostObjectMode($sObjectMode)
-			->AddMainActionButtons(static::PrepareCancelButton())
-			->AddMainActionButtons(static::PrepareSendButton()->SetLabel(Dict::S('UI:Button:AddEntryToWithChoice')));
-
-		$oCaseLogEntryForm->SetSendButtonPopoverMenu(static::PrepareTargetCaseLogSelectionPopoverMenu($oObject));
-
-		return $oCaseLogEntryForm;
-	}
-
 	/**
 	 * @return \Combodo\iTop\Application\UI\Base\Component\Button\Button
 	 */
 	protected static function PrepareCancelButton(): Button
 	{
-		return ButtonFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
+		return ButtonUIBlockFactory::MakeForSecondaryAction(Dict::S('UI:Button:Cancel'), 'cancel', 'cancel');
 	}
 
 	/**
@@ -68,7 +56,7 @@ class CaseLogEntryFormFactory
 	 */
 	protected static function PrepareSendButton(): Button
 	{
-		$oButton = ButtonFactory::MakeForPrimaryAction(Dict::S('UI:Button:Send'), 'send', 'send');
+		$oButton = ButtonUIBlockFactory::MakeForPrimaryAction(Dict::S('UI:Button:Send'), 'send', 'send');
 		$oButton->SetIconClass('fas fa-paper-plane');
 
 		return $oButton;
@@ -120,43 +108,6 @@ JS
 						break;
 				}
 			}
-		}
-
-
-		return $oMenu;
-	}
-
-	/**
-	 * Return a PopoverMenu with the list of the caselog attributes of $oObject
-	 *
-	 * @param \DBObject $oObject
-	 *
-	 * @return \Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu
-	 * @throws \CoreException
-	 * @throws \Exception
-	 */
-	protected static function PrepareTargetCaseLogSelectionPopoverMenu(DBObject $oObject): PopoverMenu
-	{
-		$sObjClass = get_class($oObject);
-
-		$oMenu = new PopoverMenu();
-		$sSectionId = 'target-caselogs';
-		$oMenu->AddSection($sSectionId);
-
-		$sCaseLogEntryFormDataRole = CaseLogEntryForm::BLOCK_CODE;
-
-		foreach(MetaModel::GetCaseLogs($sObjClass) as $sCaseLogAttCode) {
-			$oMenuItem = PopoverMenuItemFactory::MakeFromApplicationPopupMenuItem(
-				new JSPopupMenuItem(
-					CaseLogEntryForm::BLOCK_CODE.'--target-caselog--'.$sCaseLogAttCode,
-					MetaModel::GetLabel($sObjClass, $sCaseLogAttCode),
-					<<<JS
-$(this).closest('[data-role="{$sCaseLogEntryFormDataRole}"]').trigger('add_to_caselog.caselog_entry_form.itop', {caselog_att_code: '{$sCaseLogAttCode}'});
-JS
-				)
-			);
-
-			$oMenu->AddItem($sSectionId, $oMenuItem);
 		}
 
 		return $oMenu;

@@ -18,6 +18,7 @@
  */
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenu;
 use Combodo\iTop\Application\UI\Base\Component\PopoverMenu\PopoverMenuFactory;
@@ -233,7 +234,12 @@ class WebPage implements Page
 	 */
 	public function table($aConfig, $aData, $aParams = array())
 	{
-		$this->add($this->GetTable($aConfig, $aData, $aParams));
+		$this->AddUiBlock($this->GetTableBlock($aConfig, $aData));
+	}
+
+	public function GetTableBlock($aColumns, $aData)
+	{
+		return DataTableUIBlockFactory::MakeForForm(uniqid('form_', true), $aColumns, $aData);
 	}
 
 	/**
@@ -337,6 +343,11 @@ class WebPage implements Page
 		}
 		$this->oContentLayout->AddSubBlock($oBlock);
 		return $oBlock;
+	}
+
+	public function AddSubBlock(?iUIBlock $oBlock): ?iUIBlock
+	{
+		return $this->AddUiBlock($oBlock);
 	}
 
 	/**
@@ -692,7 +703,7 @@ class WebPage implements Page
 	/**
 	 * @param string|null $sHeaderValue for example `SAMESITE`. If null will set the header using the config parameter value.
 	 *
-	 * @since 2.7.2-2 3.0.0 N°3416
+	 * @since 2.7.3 3.0.0 N°3416
 	 * @uses security_header_xframe config parameter
 	 * @uses \utils::GetConfig()
 	 * @link https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options
@@ -714,6 +725,13 @@ class WebPage implements Page
 		$this->add_header('Cache-control: no-cache, no-store, must-revalidate');
 		$this->add_header('Pragma: no-cache');
 		$this->add_header('Expires: 0');
+	}
+
+	public function set_cache($iCacheSec)
+	{
+		$this->add_header("Cache-Control: max-age=$iCacheSec");
+		$this->add_header("Pragma: cache");
+		$this->add_header("Expires: ");
 	}
 
 	/**

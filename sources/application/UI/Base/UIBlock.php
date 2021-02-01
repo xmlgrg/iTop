@@ -39,22 +39,26 @@ abstract class UIBlock implements iUIBlock
 	 */
 	public const BLOCK_CODE = 'ibo-block';
 
-	/** @var string|null GLOBAL_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the "global" TWIG template which contains HTML, JS inline, JS files, CSS inline, CSS files. Should not be used too often as JS/CSS files would be duplicated making browser parsing time way longer. */
+	/** @var string|null */
 	public const DEFAULT_GLOBAL_TEMPLATE_REL_PATH = null;
-	/** @var string|null HTML_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the HTML template */
+	/** @var string|null */
 	public const DEFAULT_HTML_TEMPLATE_REL_PATH = null;
-	/** @var array JS_FILES_REL_PATH Relative paths (from <ITOP>/) to the JS files */
+	/** @var array */
 	public const DEFAULT_JS_FILES_REL_PATH = [];
-	/** @var string|null JS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the JS template on dom ready*/
+	/** @var string|null */
 	public const DEFAULT_JS_TEMPLATE_REL_PATH = null;
 	/** @var string|null Relative path (from <ITOP>/templates/) to the JS template not deferred */
 	public const DEFAULT_JS_LIVE_TEMPLATE_REL_PATH = null;
 	/** @var string|null Relative path (from <ITOP>/templates/) to the JS template after DEFAULT_JS_TEMPLATE_REL_PATH */
 	public const DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH = null;
-	/** @var array CSS_FILES_REL_PATH Relative paths (from <ITOP>/) to the CSS files */
+	/** @var array */
 	public const DEFAULT_CSS_FILES_REL_PATH = [];
-	/** @var string|null CSS_TEMPLATE_REL_PATH Relative path (from <ITOP>/templates/) to the CSS template */
+	/** @var string|null */
 	public const DEFAULT_CSS_TEMPLATE_REL_PATH = null;
+	/** @var bool */
+	public const DEFAULT_IS_HIDDEN = false;
+	/** @var array */
+	public const DEFAULT_ADDITIONAL_CSS_CLASSES = [];
 
 	/** @var string ENUM_BLOCK_FILES_TYPE_JS */
 	public const ENUM_BLOCK_FILES_TYPE_JS = 'js';
@@ -68,20 +72,24 @@ abstract class UIBlock implements iUIBlock
 	/** @var string $sId */
 	protected $sId;
 
-	/** @var string */
+	/** @var string Relative path (from <ITOP>/templates/) to the "global" TWIG template which contains HTML, JS inline, JS files, CSS inline, CSS files. Should not be used too often as JS/CSS files would be duplicated making browser parsing time way longer. */
 	protected $sGlobalTemplateRelPath;
-	/** @var string */
+	/** @var string Relative path (from <ITOP>/templates/) to the HTML template */
 	protected $sHtmlTemplateRelPath;
-	/** @var array */
-	protected $aJsTemplateRelPath;
-	/** @var string */
+	/** @var array Relative paths (from <ITOP>/templates/) to the JS templates (Live, on init., on ready) */
+	protected $aJsTemplatesRelPath;
+	/** @var string Relative path (from <ITOP>/templates/) to the CSS template */
 	protected $sCssTemplateRelPath;
-	/** @var array */
+	/** @var array Relative paths (from <ITOP>/) to the JS files */
 	protected $aJsFilesRelPath;
-	/** @var array */
+	/** @var array Relative paths (from <ITOP>/) to the CSS files */
 	protected $aCssFilesRelPath;
-	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>")  */
-	protected $aDataAttributes;
+	/** @var array Array <KEY> => <VALUE> which will be output as HTML data-xxx attributes (eg. data-<KEY>="<VALUE>") */
+	protected $aDataAttributes = [];
+	/** @var bool Whether the current block is shown or hidden */
+	protected $bIsHidden;
+	/** @var array Additional CSS classes to put on the block */
+	protected $aAdditionalCSSClasses;
 
 	/**
 	 * UIBlock constructor.
@@ -94,12 +102,13 @@ abstract class UIBlock implements iUIBlock
 		$this->aJsFilesRelPath = static::DEFAULT_JS_FILES_REL_PATH;
 		$this->aCssFilesRelPath = static::DEFAULT_CSS_FILES_REL_PATH;
 		$this->sHtmlTemplateRelPath = static::DEFAULT_HTML_TEMPLATE_REL_PATH;
-		$this->aJsTemplateRelPath[self::ENUM_JS_TYPE_LIVE] = static::DEFAULT_JS_LIVE_TEMPLATE_REL_PATH;
-		$this->aJsTemplateRelPath[self::ENUM_JS_TYPE_ON_INIT] = static::DEFAULT_JS_TEMPLATE_REL_PATH;
-		$this->aJsTemplateRelPath[self::ENUM_JS_TYPE_ON_READY] = static::DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH;
+		$this->aJsTemplatesRelPath[self::ENUM_JS_TYPE_LIVE] = static::DEFAULT_JS_LIVE_TEMPLATE_REL_PATH;
+		$this->aJsTemplatesRelPath[self::ENUM_JS_TYPE_ON_INIT] = static::DEFAULT_JS_TEMPLATE_REL_PATH;
+		$this->aJsTemplatesRelPath[self::ENUM_JS_TYPE_ON_READY] = static::DEFAULT_JS_ON_READY_TEMPLATE_REL_PATH;
 		$this->sCssTemplateRelPath = static::DEFAULT_CSS_TEMPLATE_REL_PATH;
 		$this->sGlobalTemplateRelPath = static::DEFAULT_GLOBAL_TEMPLATE_REL_PATH;
-		$this->aDataAttributes = [];
+		$this->bIsHidden = static::DEFAULT_IS_HIDDEN;
+		$this->aAdditionalCSSClasses = static::DEFAULT_ADDITIONAL_CSS_CLASSES;
 	}
 
 	/**
@@ -120,11 +129,12 @@ abstract class UIBlock implements iUIBlock
 	/**
 	 * @inheritDoc
 	 */
-	public function GetJsTemplateRelPath(string $sType) {
+	public function GetJsTemplatesRelPath(string $sType) {
 		if (!in_array($sType, [self::ENUM_JS_TYPE_LIVE, self::ENUM_JS_TYPE_ON_INIT, self::ENUM_JS_TYPE_ON_READY])) {
 			throw new UIException($this, "Type of javascript $sType not supported");
 		}
-		return $this->aJsTemplateRelPath[$sType];
+
+		return $this->aJsTemplatesRelPath[$sType];
 	}
 
 	/**
@@ -209,7 +219,7 @@ abstract class UIBlock implements iUIBlock
 	 * @return array
 	 * @throws \Exception
 	 */
-	public function GetJsTemplateRelPathRecursively(): array
+	public function GetJsTemplatesRelPathRecursively(): array
 	{
 		return $this->GetUrlRecursively(static::ENUM_BLOCK_FILES_TYPE_JS, static::ENUM_BLOCK_FILES_TYPE_TEMPLATE, false);
 	}
@@ -238,6 +248,7 @@ abstract class UIBlock implements iUIBlock
 	public function AddJsFileRelPath(string $sPath)
 	{
 		$this->aJsFilesRelPath[] = $sPath;
+
 		return $this;
 	}
 
@@ -247,6 +258,7 @@ abstract class UIBlock implements iUIBlock
 	public function AddCssFileRelPath(string $sPath)
 	{
 		$this->aCssFilesRelPath[] = $sPath;
+
 		return $this;
 	}
 
@@ -295,6 +307,100 @@ abstract class UIBlock implements iUIBlock
 	}
 
 	/**
+	 * Note: If $sCSSClass is already present, proceeds silently
+	 *
+	 * @param string $sCSSClass
+	 *
+	 * @return $this
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 */
+	public function AddCSSClass(string $sCSSClass)
+	{
+		$sCSSClass = trim($sCSSClass);
+
+		if (!array_key_exists($sCSSClass, $this->aAdditionalCSSClasses)) {
+			$this->aAdditionalCSSClasses[] = $sCSSClass;
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Note: If $sCSSClass is not present, proceeds silently
+	 *
+	 * @param string $sCSSClass
+	 *
+	 * @return $this
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 */
+	public function RemoveCSSClass(string $sCSSClass)
+	{
+		if (array_key_exists($sCSSClass, $this->aAdditionalCSSClasses)) {
+			unset($this->aAdditionalCSSClasses[$sCSSClass]);
+		}
+
+		return $this;
+	}
+
+	/**
+	 * @param array $aCSSClasses like <code>['ibo-is-hidden', 'ibo-alert--body']</code>
+	 *
+	 * @return $this
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 */
+	public function AddCSSClasses(array $aCSSClasses)
+	{
+		foreach ($aCSSClasses as $sCSSClass) {
+			if (!empty($sCSSClass)) {
+				$this->AddCSSClass($sCSSClass);
+			}
+		}
+
+		return $this;
+	}
+
+	/**
+	 * Overrides additional classes with the specified value
+	 *
+	 * @param array $aCSSClasses like <code>['ibo-is-hidden', 'ibo-alert--body']</code>
+	 *
+	 * @return $this
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 */
+	public function SetCSSClasses(array $aCSSClasses)
+	{
+		$this->aAdditionalCSSClasses = [];
+		$this->AddCSSClasses($aCSSClasses);
+
+		return $this;
+	}
+
+	/**
+	 * @return array
+	 *
+	 * @uses $aAdditionalCSSClasses
+	 * @see static::GetAdditionalCSSClassesAsString() for a simpler usage in the views
+	 */
+	public function GetAdditionalCSSClasses(): array
+	{
+		return $this->aAdditionalCSSClasses;
+	}
+
+	/**
+	 * @return string All additional CSS classes as a spec-separated string
+	 *
+	 * @uses static::GetAdditionalCSSClasses()
+	 */
+	public function GetAdditionalCSSClassesAsString(): string
+	{
+		return implode(' ', $this->GetAdditionalCSSClasses());
+	}
+
+	/**
 	 * Return an array of the URL of the block $sFilesType and its sub blocks.
 	 * URL is relative unless the $bAbsoluteUrl is set to true.
 	 *
@@ -338,6 +444,7 @@ abstract class UIBlock implements iUIBlock
 	public function SetDataAttributes(array $aDataAttributes)
 	{
 		$this->aDataAttributes = $aDataAttributes;
+
 		return $this;
 	}
 
@@ -351,6 +458,27 @@ abstract class UIBlock implements iUIBlock
 	public function AddDataAttribute(string $sName, string $sValue)
 	{
 		$this->aDataAttributes[$sName] = $sValue;
+
+		return $this;
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function IsHidden(): bool
+	{
+		return $this->bIsHidden;
+	}
+
+	/**
+	 * @param bool $bIsHidden
+	 *
+	 * @return $this
+	 */
+	public function SetIsHidden(bool $bIsHidden)
+	{
+		$this->bIsHidden = $bIsHidden;
+
 		return $this;
 	}
 }

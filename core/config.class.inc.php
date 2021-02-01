@@ -39,13 +39,8 @@ define('ACCESS_READONLY', 0);
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-require_once('coreexception.class.inc.php');
 require_once('attributedef.class.inc.php'); // For the defines
 require_once('simplecrypt.class.inc.php');
-
-class ConfigException extends CoreException
-{
-}
 
 // was utf8 but it only supports BMP chars (https://dev.mysql.com/doc/refman/5.5/en/charset-unicode-utf8mb4.html)
 // so we switched to utf8mb4 in iTop 2.5, adding dependency to MySQL 5.5.3
@@ -71,7 +66,7 @@ define('DEFAULT_ALLOWED_LOGIN_TYPES', 'form|external|basic');
 define('DEFAULT_EXT_AUTH_VARIABLE', '$_SERVER[\'REMOTE_USER\']');
 define('DEFAULT_ENCRYPTION_KEY', '@iT0pEncr1pti0n!'); // We'll use a random generated key later (if possible)
 define('DEFAULT_ENCRYPTION_LIB', 'Mcrypt'); // We'll define the best encryption available later
-
+define('DEFAULT_HASH_ALGO', PASSWORD_DEFAULT);
 /**
  * Config
  * configuration data (this class cannot not be localized, because it is responsible for loading the dictionaries)
@@ -1130,7 +1125,7 @@ class Config
 		],
 		'quick_create.enabled' => [
 			'type' => 'bool',
-			'description' => 'Whether or not the global search is enabled',
+			'description' => 'Whether or not the quick create is enabled',
 			'default' => true,
 			'value' => true,
 			'source_of_value' => '',
@@ -1138,15 +1133,23 @@ class Config
 		],
 		'quick_create.max_autocomplete_results' => [
 			'type' => 'integer',
-			'description' => 'Max. number of elements returned by the autocomplete.',
+			'description' => 'Max. number of elements returned by the autocomplete',
 			'default' => 10,
 			'value' => 10,
 			'source_of_value' => '',
 			'show_in_conf_sample' => false,
 		],
+		'quick_create.show_history' => [
+			'type' => 'bool',
+			'description' => 'Whether or not to display the elements in the history',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
 		'quick_create.max_history_results' => [
 			'type' => 'integer',
-			'description' => 'Max. number of elements in the history.',
+			'description' => 'Max. number of elements in the history',
 			'default' => 10,
 			'value' => 10,
 			'source_of_value' => '',
@@ -1165,6 +1168,14 @@ class Config
 		'global_search.enabled' => [
 			'type' => 'bool',
 			'description' => 'Whether or not the global search is enabled',
+			'default' => true,
+			'value' => true,
+			'source_of_value' => '',
+			'show_in_conf_sample' => false,
+		],
+		'global_search.show_history' => [
+			'type' => 'bool',
+			'description' => 'Whether or not to display the elements in the history',
 			'default' => true,
 			'value' => true,
 			'source_of_value' => '',
@@ -1397,6 +1408,19 @@ class Config
 	}
 
 	/**
+	 * Whether the $sPropCode parameter has a custom value or the default one.
+	 *
+	 * @param string $sPropCode
+	 *
+	 * @return bool true if the $sPropCode parameter has been customized, false if it is the default value.
+	 * @since 3.0.0
+	 */
+	public function IsCustomValue(string $sPropCode): bool
+	{
+		return $this->m_aSettings[$sPropCode]['value'] !== $this->m_aSettings[$sPropCode]['default'];
+	}
+
+	/**
 	 * Event log options (see LOG_... definition)
 	 */
 	// Those variables will be deprecated later, when the transition to ...Get('my_setting') will be done
@@ -1467,6 +1491,11 @@ class Config
 	protected $m_aCharsets;
 
 	/**
+	 * @var integer Password hash algorithm to use.
+	 */
+	protected $m_iPasswordHashAlgo;
+
+	/**
 	 * Config constructor.
 	 *
 	 * @param string|null $sConfigFile
@@ -1509,6 +1538,7 @@ class Config
 		$this->m_sExtAuthVariable = DEFAULT_EXT_AUTH_VARIABLE;
 		$this->m_aCharsets = array();
 		$this->m_bQueryCacheEnabled = DEFAULT_QUERY_CACHE_ENABLED;
+		$this->m_iPasswordHashAlgo = DEFAULT_HASH_ALGO;
 
 		//define default encryption params according to php install
 		$aEncryptParams = SimpleCrypt::GetNewDefaultParams();
@@ -1668,6 +1698,7 @@ class Config
 		$this->m_sEncryptionKey = isset($MySettings['encryption_key']) ? trim($MySettings['encryption_key']) : $this->m_sEncryptionKey;
 		$this->m_sEncryptionLibrary = isset($MySettings['encryption_library']) ? trim($MySettings['encryption_library']) : $this->m_sEncryptionLibrary;
 		$this->m_aCharsets = isset($MySettings['csv_import_charsets']) ? $MySettings['csv_import_charsets'] : array();
+		$this->m_iPasswordHashAlgo = isset($MySettings['password_hash_algo']) ? $MySettings['password_hash_algo'] : $this->m_iPasswordHashAlgo;
 	}
 
 	protected function Verify()
@@ -1823,6 +1854,19 @@ class Config
 		return $this->m_aCharsets;
 	}
 
+	public function GetPasswordHashAlgo()
+	{
+		return $this->m_iPasswordHashAlgo;
+	}
+
+	/**
+	 * @param $iPasswordHashAlgo
+	 */
+	public function SetPasswordHashAlgo($iPasswordHashAlgo)
+	{
+		$this->m_iPasswordHashAlgo = $iPasswordHashAlgo;
+	}
+
 	public function SetLogGlobal($iLogGlobal)
 	{
 		$this->m_iLogGlobal = $iLogGlobal;
@@ -1938,6 +1982,7 @@ class Config
 		$aSettings['encryption_key'] = $this->m_sEncryptionKey;
 		$aSettings['encryption_library'] = $this->m_sEncryptionLibrary;
 		$aSettings['csv_import_charsets'] = $this->m_aCharsets;
+		$aSettings['password_hash_algo'] = $this->m_iPasswordHashAlgo;
 
 		foreach ($this->m_aModuleSettings as $sModule => $aProperties)
 		{
@@ -2050,6 +2095,7 @@ class Config
 				'encryption_key' => $this->m_sEncryptionKey,
 				'encryption_library' => $this->m_sEncryptionLibrary,
 				'csv_import_charsets' => $this->m_aCharsets,
+				'password_hash_algo' => $this->m_iPasswordHashAlgo
 			);
 			foreach ($aOtherValues as $sKey => $value)
 			{

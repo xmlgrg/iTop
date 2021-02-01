@@ -7,14 +7,18 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Input\AbstractInput;
+use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
  * @since 3.0.0
  */
-class FieldFactory
+class FieldUIBlockFactory extends AbstractUIBlockFactory
 {
+	public const TWIG_TAG_NAME = 'UIField';
+	public const UI_BLOCK_CLASS_NAME = Field::class;
+
 	public static function MakeFromParams($aParams)
 	{
 		$oValue = new Html($aParams['value']);
@@ -61,7 +65,7 @@ class FieldFactory
 		$oField->$sMethodName((($iParamsFlags & $iConstant) === $iConstant));
 	}
 
-	public static function MakeFromObject(string $sLabel, AbstractInput $oInput, ?string $sLayout = null)
+	public static function MakeFromObject(string $sLabel, UIBlock $oInput, ?string $sLayout = null)
 	{
 		$oField = new Field($sLabel, $oInput);
 
@@ -70,5 +74,27 @@ class FieldFactory
 		}
 
 		return $oField;
+	}
+
+	public static function MakeLarge(string $sLabel, string $sValueHtml = '')
+	{
+		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_LARGE);
+		return $oField;
+	}
+
+	public static function MakeSmall(string $sLabel, string $sValueHtml = '')
+	{
+		$oField = new Field($sLabel, new Html($sValueHtml));
+		$oField->SetLayout(Field::ENUM_FIELD_LAYOUT_SMALL);
+		return $oField;
+	}
+
+	public static function MakeStandard(string $sLabel = '', string $sLayout = Field::ENUM_FIELD_LAYOUT_SMALL, ?string $sId = null)
+	{
+		$oField = new Field($sLabel, null, $sId);
+		$oField->SetLayout($sLayout);
+		return $oField;
+
 	}
 }

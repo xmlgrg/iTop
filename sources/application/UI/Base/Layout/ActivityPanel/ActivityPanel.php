@@ -63,8 +63,6 @@ class ActivityPanel extends UIBlock
 	protected $bAreEntriesSorted;
 	/** @var bool $bHasLifecycle True if the host object has a lifecycle */
 	protected $bHasLifecycle;
-	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm $oActivityTabEntryForm New entry form for the activity tab which is different from the case log tabs */
-	protected $oActivityTabEntryForm;
 	/** @var \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm[] $aCaseLogTabsEntryForms */
 	protected $aCaseLogTabsEntryForms;
 
@@ -104,6 +102,9 @@ class ActivityPanel extends UIBlock
 		$this->oObject = $oObject;
 		$sObjectClass = get_class($this->oObject);
 
+		// Check if object has a lifecycle
+		$this->bHasLifecycle = !empty(MetaModel::GetStateAttributeCode($sObjectClass));
+
 		// Initialize the case log tabs
 		$this->InitializeCaseLogTabs();
 		$this->InitializeCaseLogTabsEntryForms();
@@ -113,9 +114,6 @@ class ActivityPanel extends UIBlock
 		{
 			$this->AddCaseLogTab($sCaseLogAttCode);
 		}
-
-		// Check if object has a lifecycle
-		$this->bHasLifecycle = !empty(MetaModel::GetStateAttributeCode($sObjectClass));
 
 		return $this;
 	}
@@ -400,6 +398,7 @@ class ActivityPanel extends UIBlock
 	/**
 	 * Add the case log tab to the panel
 	 * Note: Case log entries are added separately, see static::AddEntry()
+	 * Note: If hidden, the case log will not be added
 	 *
 	 * @param string $sAttCode
 	 *
@@ -411,12 +410,20 @@ class ActivityPanel extends UIBlock
 		// Add case log only if not already existing
 		if (!array_key_exists($sAttCode, $this->aCaseLogs))
 		{
-			$this->aCaseLogs[$sAttCode] = [
-				'rank' => count($this->aCaseLogs) + 1,
-				'title' => MetaModel::GetLabel(get_class($this->oObject), $sAttCode),
-				'total_messages_count' => 0,
-				'authors' => [],
-			];
+			$iFlags = ($this->GetObject()->IsNew()) ? $this->GetObject()->GetInitialStateAttributeFlags($sAttCode) : $this->GetObject()->GetAttributeFlags($sAttCode);
+			$bIsHidden = (OPT_ATT_HIDDEN === ($iFlags & OPT_ATT_HIDDEN));
+			$bIsReadOnly = (OPT_ATT_READONLY === ($iFlags & OPT_ATT_READONLY));
+
+			// Only if not hidden
+			if (false === $bIsHidden) {
+				$this->aCaseLogs[$sAttCode] = [
+					'rank' => count($this->aCaseLogs) + 1,
+					'title' => MetaModel::GetLabel(get_class($this->oObject), $sAttCode),
+					'total_messages_count' => 0,
+					'authors' => [],
+					'is_read_only' => $bIsReadOnly,
+				];
+			}
 		}
 
 		return $this;
@@ -524,6 +531,31 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
+	 * Whether the submission of the case logs present in the activity panel is autonomous or will be handled by another form
+	 *
+	 * @return bool
+	 */
+	public function IsCaseLogsSubmitAutonomous(): bool
+	{
+		$iAutonomousSubmission = 0;
+		$iBridgedSubmissions = 0;
+		foreach ($this->GetCaseLogTabsEntryForms() as $oCaseLogEntryForm) {
+			if ($oCaseLogEntryForm->IsSubmitAutonomous()) {
+				$iAutonomousSubmission++;
+			}
+			else {
+				$iBridgedSubmissions++;
+			}
+		}
+
+		if (($iAutonomousSubmission > 0) && ($iBridgedSubmissions > 0)) {
+			throw new Exception('All case logs should have the same submission mode (Autonomous: '.$iAutonomousSubmission.', Bridged: '.$iBridgedSubmissions);
+		}
+
+		return $iAutonomousSubmission > 0;
+	}
+
+	/**
 	 * Return true if the host object has a lifecycle
 	 *
 	 * @return bool
@@ -546,42 +578,6 @@ class ActivityPanel extends UIBlock
 	}
 
 	/**
-	 * Return the entry form for the activity tab
-	 *
-	 * @see $oActivityTabEntryForm
-	 * @return \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm
-	 */
-	public function GetActivityTabEntryForm(): CaseLogEntryForm
-	{
-		return $this->oActivityTabEntryForm;
-	}
-
-	/**
-	 * Set the entry form for the activity tab
-	 *
-	 * @param \Combodo\iTop\Application\UI\Base\Layout\ActivityPanel\CaseLogEntryForm\CaseLogEntryForm $oCaseLogEntryForm
-	 * @see $oActivityTabEntryForm
-	 *
-	 * @return $this
-	 *
-	 */
-	public function SetActivityTabEntryForm(CaseLogEntryForm $oCaseLogEntryForm)
-	{
-		$this->oActivityTabEntryForm = $oCaseLogEntryForm;
-		return $this;
-	}
-
-	/**
-	 * Return true is there is an entry form for the activity tab
-	 *
-	 * @return bool
-	 */
-	public function HasActivityTabEntryForm()
-	{
-		return $this->oActivityTabEntryForm !== null;
-	}
-
-	/**
 	 * @inheritdoc
 	 */
 	public function GetSubBlocks()
@@ -590,11 +586,6 @@ class ActivityPanel extends UIBlock
 
 		foreach($this->GetCaseLogTabsEntryForms() as $sCaseLogId => $oCaseLogEntryForm) {
 			$aSubBlocks[$oCaseLogEntryForm->GetId()] = $oCaseLogEntryForm;
-		}
-
-		if ($this->HasActivityTabEntryForm()) {
-			$oNewEntryForm = $this->GetActivityTabEntryForm();
-			$aSubBlocks[$oNewEntryForm->GetId()] = $oNewEntryForm;
 		}
 
 		return $aSubBlocks;

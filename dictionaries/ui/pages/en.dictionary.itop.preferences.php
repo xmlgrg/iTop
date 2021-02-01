@@ -26,4 +26,11 @@ Dict::Add('EN US', 'English', 'English', array(
 	'UI:RichText:ToolbarState' => 'Toolbar default state',
 	'UI:RichText:ToolbarState:Expanded' => 'Expanded',
 	'UI:RichText:ToolbarState:Collapsed' => 'Collapsed',
+	'UI:Tabs:Preferences' => 'Tabs',
+	'UI:Tabs:Layout:Label' => 'Tabs layout',
+	'UI:Tabs:Layout:Horizontal' => 'Horizontal',
+	'UI:Tabs:Layout:Vertical' => 'Vertical',
+	'UI:Tabs:Scrollable:Label' => 'Tabs navigation',
+	'UI:Tabs:Scrollable:Classic' => 'Classic',
+	'UI:Tabs:Scrollable:Scrollable' => 'Scrollable',
 ));

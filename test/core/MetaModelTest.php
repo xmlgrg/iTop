@@ -28,7 +28,6 @@ class MetaModelTest extends ItopDataTestCase
 	{
 		parent::setUp();
 		require_once APPROOT.'/core/metamodel.class.php';
-		require_once APPROOT.'/core/coreexception.class.inc.php';
 	}
 
     /**
@@ -315,6 +314,28 @@ class MetaModelTest extends ItopDataTestCase
 
 		// Should not get here
 		assertTrue(false);
+	}
+
+	/**
+	 * @covers \MetaModel::IsLinkClass
+	 * @dataProvider GetIsLinkClassProvider
+	 *
+	 * @param string $sClass Class to test
+	 * @param bool   $bExpectedIsLink Expected result
+	 */
+	public function testIsLinkClass(string $sClass, bool $bExpectedIsLink)
+	{
+		$bIsLink = MetaModel::IsLinkClass($sClass);
+
+		$this->assertEquals($bExpectedIsLink, $bIsLink, 'Class "'.$sClass.'" was excepted to be '.($bExpectedIsLink ? '' : 'NOT ').'a link class.');
+	}
+
+	public function GetIsLinkClassProvider(): array
+	{
+		return [
+			['Person', false],
+			['lnkPersonToTeam', true],
+		];
 	}
 }
 

@@ -17,7 +17,7 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableSettings;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 
@@ -1089,8 +1089,8 @@ JS
 		$sPopoverMenuId = "ibo-dashboard-menu-popover-{$sId}";
 		$sName = 'UI:Dashboard:Actions';
 		$oToolbar = $oPage->GetTopBarLayout()->GetToolbar();
-		$oActionButton = ButtonFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
-		$oActionButton->AddCSSClasses("ibo-top-bar--toolbar-dashboard-menu-toggler");
+		$oActionButton = ButtonUIBlockFactory::MakeLinkNeutral('', '', 'fas fa-ellipsis-v', $sName, '', $sMenuTogglerId);
+		$oActionButton->AddCSSClass('ibo-top-bar--toolbar-dashboard-menu-toggler');
 
 		$oToolbar->AddSubBlock($oActionButton);
 
@@ -1115,7 +1115,7 @@ JS
 		utils::GetPopupMenuItems($oPage, iPopupMenuExtension::MENU_DASHBOARD_ACTIONS, $this, $aActions);
 
 		$oToolbar->AddSubBlock($oPage->GetPopoverMenu($sPopoverMenuId, $aActions));
-		$oActionButton->AddCSSClasses('ibo-action-button')
+		$oActionButton->AddCSSClass('ibo-action-button')
 			->SetJsCode(<<<JS
 $("#{$sPopoverMenuId}").popover_menu({toggler: "#{$sMenuTogglerId}"});
 $('#{$sMenuTogglerId}').on('click', function(oEvent) {

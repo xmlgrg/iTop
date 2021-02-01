@@ -19,9 +19,9 @@
 
 
 use Combodo\iTop\Application\TwigBase\Twig\TwigHelper;
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Breadcrumbs\Breadcrumbs;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\Layout\iUIContentBlock;
 use Combodo\iTop\Application\UI\Base\Layout\NavigationMenu\NavigationMenuFactory;
@@ -461,28 +461,14 @@ JS
 		// TODO 3.0.0: To preserve
 		$this->add_ready_script(InlineImage::FixImagesWidth());
 
-		/*
-		 * Not used since the sorting of the tables is always performed server-side
-		AttributeDateTime::InitTableSorter($this, 'custom_date_time');
-		AttributeDate::InitTableSorter($this, 'custom_date');
-		*/
+		// user pref for client side
+		// see GetUserPreference() in utils.js
+		$sUserPrefs = appUserPreferences::GetAsJSON();
+		$this->add_script("var oUserPreferences = $sUserPrefs;");
 
 		// TODO 3.0.0: What is this for?
-		$sUserPrefs = appUserPreferences::GetAsJSON();
 		$this->add_script(
 			<<<JS
-//		// for JQuery history
-//		function history_callback(hash)
-//		{
-//			// do stuff that loads page content based on hash variable
-//			var aMatches = /^tab_(.*)$/.exec(hash);
-//			if (aMatches != null)
-//			{
-//				var tab = $('#'+hash);
-//				tab.parents('div[id^=tabbedContent]:first').tabs('select', aMatches[1]);
-//			}
-//		}
-
 		function goBack()
 		{
 			window.history.back();
@@ -518,10 +504,6 @@ JS
 				$('#rawOutput').dialog( {autoOpen: true, modal:false, width: '80%'});
 			}
 		}
-		
-		var oUserPreferences = $sUserPrefs;
-
-
 JS
 		);
 
@@ -648,8 +630,8 @@ JS
 			$aNewEntry = [
 				'id' => $this->sBreadCrumbEntryId,
 				'url' => $this->sBreadCrumbEntryUrl,
-				'label' => utils::HtmlEntities($this->sBreadCrumbEntryLabel),
-				'description' => utils::HtmlEntities($this->sBreadCrumbEntryDescription),
+				'label' => utils::EscapeHtml($this->sBreadCrumbEntryLabel),
+				'description' => utils::EscapeHtml($this->sBreadCrumbEntryDescription),
 				'icon' => $this->sBreadCrumbEntryIcon,
 				'icon_type' => $this->sBreadCrumbEntryIconType,
 			];
@@ -744,8 +726,8 @@ JS
 		$oHeader = new UIContentBlock();
 
 		// Log KPIs
-		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()){
-			$oKPIAlert = AlertFactory::MakeForInformation('KPIs', ExecutionKPI::GetDescription())
+		if (UserRights::IsAdministrator() && ExecutionKPI::IsEnabled()) {
+			$oKPIAlert = AlertUIBlockFactory::MakeForInformation('KPIs', ExecutionKPI::GetDescription())
 				->SetIsClosable(false)
 				->SetIsCollapsible(false);
 			$oHeader->AddSubBlock($oKPIAlert);
@@ -753,7 +735,7 @@ JS
 
 		// Archive mode
 		if (utils::IsArchiveMode()) {
-			$oArchiveAlert = AlertFactory::MakeForInformation(Dict::S('UI:ArchiveMode:Banner'), '')
+			$oArchiveAlert = AlertUIBlockFactory::MakeForInformation(Dict::S('UI:ArchiveMode:Banner'), '')
 				->SetIsClosable(false)
 				->SetIsCollapsible(false);
 			$oHeader->AddSubBlock($oArchiveAlert);
@@ -772,24 +754,23 @@ JS
 			$sAdminMessage = trim(MetaModel::GetConfig()->Get('access_message'));
 			$sRestrictionTitle = empty($sAdminMessage) ? '' : $sAdminMessage;
 
-			$oRestrictionAlert = AlertFactory::MakeForWarning($sRestrictionTitle, $sRestrictionMessage)
+			$oRestrictionAlert = AlertUIBlockFactory::MakeForWarning($sRestrictionTitle, $sRestrictionMessage)
 				->SetIsClosable(false)
 				->SetIsCollapsible(false);
 			$oHeader->AddSubBlock($oRestrictionAlert);
 		}
 
 		// Misc. app. messages
-		foreach ($this->m_aMessages as $aMessage)
-		{
+		foreach ($this->m_aMessages as $aMessage) {
 			$sMessageForHtml = $aMessage['message'];
-			if($aMessage['tip']) {
+			if ($aMessage['tip']) {
 				$sTooltipForHtml = utils::HtmlEntities($aMessage['tip']);
 				$sMessageForHtml = <<<HTML
 <div data-tooltip-content="$sTooltipForHtml">$sMessageForHtml</div>
 HTML;
 			}
 			// Note: Message icon has been ignored during 3.0 migration. If we want them back, we should find a proper way to integrate them, not just putting an <img /> tag
-			$oAppMessageAlert = AlertFactory::MakeForInformation('', $sMessageForHtml);
+			$oAppMessageAlert = AlertUIBlockFactory::MakeForInformation('', $sMessageForHtml);
 			$oHeader->AddSubBlock($oAppMessageAlert);
 		}
 
@@ -1025,7 +1006,7 @@ EOF
 	public function AddTabContainer($sTabContainer, $sPrefix = '', iUIContentBlock $oParentBlock = null)
 	{
 		if(is_null($oParentBlock)) {
-			$oParentBlock = PanelFactory::MakeNeutral('');
+			$oParentBlock = PanelUIBlockFactory::MakeNeutral('');
 			$this->AddUiBlock($oParentBlock);
 		}
 

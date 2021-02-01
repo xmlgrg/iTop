@@ -24,7 +24,7 @@
  * @license     http://opensource.org/licenses/AGPL-3.0
  */
 
-use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableFactory;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\DataTableUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockIndirectLinksEdit\BlockIndirectLinksEdit;
 use Combodo\iTop\Application\UI\Links\Indirect\BlockObjectPickerDialog\BlockObjectPickerDialog;
@@ -351,15 +351,7 @@ JS
 	 */
 	protected function GetFormTableBlock($aConfig, $aData)
 	{
-		$oTable = DataTableFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig);
-
-		foreach ($aData as $iRowId => $aRow)
-		{
-			$oRow = new FormTableRow("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aRow, $iRowId);
-			$oTable->AddRow($oRow);
-		}
-
-		return $oTable;
+		return DataTableUIBlockFactory::MakeForForm("{$this->m_sAttCode}{$this->m_sNameSuffix}", $aConfig, $aData);
 	}
 
 
@@ -387,7 +379,7 @@ JS
 	{
 		$sLinkedSetId = "{$this->m_sAttCode}{$this->m_sNameSuffix}";
 
-		$oBlock = new BlockIndirectLinksEdit("linkedset_{$sLinkedSetId}", "ibo-block-indirect-links--edit");
+		$oBlock = new BlockIndirectLinksEdit("linkedset_{$sLinkedSetId}", ["ibo-block-indirect-links--edit"]);
 
 		$oBlock->sLinkedSetId = $sLinkedSetId;
 		$oBlock->sClass = $this->m_sClass;

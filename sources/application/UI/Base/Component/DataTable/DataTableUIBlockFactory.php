@@ -10,10 +10,12 @@ use ApplicationException;
 use appUserPreferences;
 use AttributeLinkedSet;
 use cmdbAbstractObject;
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTable\FormTable;
+use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\FormTableRow\FormTableRow;
 use Combodo\iTop\Application\UI\Base\Component\DataTable\StaticTable\StaticTable;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
-use Combodo\iTop\Application\UI\Base\Component\Title\TitleFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Title\TitleUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\Toolbar\Toolbar;
 use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use DBObjectSet;
@@ -25,15 +27,17 @@ use utils;
 use WebPage;
 
 /**
- * Class DataTableFactory
+ * Class DataTableUIBlockFactory
  *
  * @internal
  * @package Combodo\iTop\Application\UI\Base\Component\DataTable
  * @since 3.0.0
  */
-class DataTableFactory
+class DataTableUIBlockFactory extends AbstractUIBlockFactory
 {
-
+	public const TWIG_TAG_NAME = 'UIDataTable';
+	public const UI_BLOCK_CLASS_NAME = DataTable::class;
+	
 	/**
 	 * @param \WebPage $oPage
 	 * @param string $sListId
@@ -54,7 +58,7 @@ class DataTableFactory
 	 */
 	public static function MakeForResult(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oDataTable = DataTableFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
+		$oDataTable = DataTableUIBlockFactory::MakeForRendering($sListId, $oSet, $aExtraParams);
 		return self::RenderDataTable($oDataTable, 'list', $oPage, $sListId, $oSet, $aExtraParams);
 	}
 
@@ -77,7 +81,7 @@ class DataTableFactory
 	 */
 	public static function MakeForObject(WebPage $oPage, string $sListId, DBObjectSet $oSet, $aExtraParams = array())
 	{
-		$oDataTable = DataTableFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
+		$oDataTable = DataTableUIBlockFactory::MakeForRenderingObject($sListId, $oSet, $aExtraParams);
 		return self::RenderDataTable($oDataTable, 'listInObject', $oPage, $sListId, $oSet, $aExtraParams);
 	}
 
@@ -110,7 +114,7 @@ class DataTableFactory
 		}
 
 		if (!isset($aExtraParams['surround_with_panel']) || $aExtraParams['surround_with_panel']) {
-			$oContainer = PanelFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClasses('ibo-datatable-panel');
+			$oContainer = PanelUIBlockFactory::MakeForClass($oSet->GetClass(), "Result")->AddCSSClass('ibo-datatable-panel');
 			$oContainer->AddToolbarBlock($oBlockMenu);
 			$oContainer->AddMainBlock($oDataTable);
 		} else {
@@ -749,7 +753,7 @@ class DataTableFactory
 	public static function MakeForStaticData(string $sTitle, array $aColumns, array $aData, ?string $sId = null)
 	{
 		$oBlock = new UIContentBlock();
-		$oTitle = TitleFactory::MakeNeutral($sTitle, 3);
+		$oTitle = TitleUIBlockFactory::MakeNeutral($sTitle, 3);
 		$oBlock->AddSubBlock($oTitle);
 		$oTable = new StaticTable($sId);
 		$oTable->SetColumns($aColumns);
@@ -759,11 +763,16 @@ class DataTableFactory
 		return $oBlock;
 	}
 
-	public Static function MakeForForm(string $sRef, array $aColumns): FormTable
+	public static function MakeForForm(string $sRef, array $aColumns, array $aData = []): FormTable
 	{
 		$oTable = new FormTable("datatable_".$sRef);
 		$oTable->SetRef($sRef);
 		$oTable->SetColumns($aColumns);
+
+		foreach ($aData as $iRowId => $aRow) {
+			$oRow = new FormTableRow($sRef, $aColumns, $aRow, $iRowId);
+			$oTable->AddRow($oRow);
+		}
 
 		return $oTable;
 	}

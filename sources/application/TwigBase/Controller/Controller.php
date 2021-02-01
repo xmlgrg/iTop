@@ -140,7 +140,10 @@ abstract class Controller
 		$this->m_sModule = $sModule;
 	}
 
-	private function GetDir()
+	/**
+	 * @return string
+	 */
+	private function GetDir(): string
 	{
 		return dirname((new ReflectionClass(static::class))->getFileName());
 	}
@@ -169,8 +172,6 @@ abstract class Controller
 		}
 		catch (Exception $e)
 		{
-			require_once(APPROOT."/setup/setuppage.class.inc.php");
-
 			http_response_code(500);
 			$oP = new ErrorPage(Dict::S('UI:PageTitle:FatalError'));
 			$oP->add("<h1>".Dict::S('UI:FatalErrorMessage')."</h1>\n");
@@ -369,8 +370,6 @@ abstract class Controller
 	{
 		$this->m_sMenuId = $sMenuId;
 	}
-
-
 
 	/**
 	 * Set the default operation when no 'operation' parameter is given on URL

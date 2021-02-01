@@ -17,13 +17,16 @@
  * You should have received a copy of the GNU Affero General Public License
  */
 
-use Combodo\iTop\Application\UI\Base\Component\Alert\AlertFactory;
-use Combodo\iTop\Application\UI\Base\Component\Button\ButtonFactory;
+use Combodo\iTop\Application\UI\Base\Component\Alert\AlertUIBlockFactory;
+use Combodo\iTop\Application\UI\Base\Component\Button\ButtonUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\Component\CollapsibleSection\CollapsibleSection;
 use Combodo\iTop\Application\UI\Base\Component\FieldSet\FieldSet;
 use Combodo\iTop\Application\UI\Base\Component\Form\Form;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Component\Html\HtmlFactory;
+use Combodo\iTop\Application\UI\Base\Component\Input\InputFactory;
 use Combodo\iTop\Application\UI\Base\Component\Input\TextArea;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
 
 require_once('../approot.inc.php');
 require_once(APPROOT.'/application/application.inc.php');
@@ -79,8 +82,10 @@ function ShowExamples($oP, $sExpression)
 			}
 			//$aDisplayData[$sTopic][] = array(
 			$aDisplayData[Dict::S('UI:RunQuery:QueryExamples')][] = array(
-				'desc' => "<div style=\"$sHighlight\">".htmlentities($sDescription, ENT_QUOTES, 'UTF-8')."</div>",
-				'oql' => "<div style=\"$sHighlight\">".htmlentities($sOql, ENT_QUOTES, 'UTF-8')."</div>",
+				'desc' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sDescription)."</div>",
+				'oql' => "<div style=\"$sHighlight\">".utils::EscapeHtml($sOql)."</div>",
+				//TODO 3.0.0 : buttons are not styled properly yet...
+				// This whole "query examples" may be migrated to TWIG using iTop Twig tags ?
 				'go' => "<form method=\"get\"><input type=\"hidden\" name=\"expression\" value=\"$sOql\"><input type=\"submit\" value=\"".Dict::S('UI:Button:Test')."\" $sDisable>$sContext</form>\n",
 			);
 		}
@@ -98,8 +103,8 @@ function ShowExamples($oP, $sExpression)
 
 	foreach ($aDisplayData as $sTopic => $aQueriesDisplayData) {
 		$bShowOpened = $bUsingExample;
-		$sTopicHtml = $oP->GetTable($aDisplayConfig, $aQueriesDisplayData);
-		$oTopicSection = new CollapsibleSection($sTopic, [new Html($sTopicHtml)]);
+		$oTopic = $oP->GetTableBlock($aDisplayConfig, $aQueriesDisplayData);
+		$oTopicSection = new CollapsibleSection($sTopic, [$oTopic]);
 		$oTopicSection->SetOpenedByDefault($bShowOpened);
 		$oP->AddUiBlock($oTopicSection);
 	}
@@ -172,19 +177,12 @@ try
 	$oHiddenParams = new Html($oAppContext->GetForForm());
 	$oQueryForm->AddSubBlock($oHiddenParams);
 
+	//--- Query textarea
 	$oQueryTitle = new Html('<h2>'.Dict::S('UI:RunQuery:ExpressionToEvaluate').'</h2>');
 	$oQueryForm->AddSubBlock($oQueryTitle);
-	$oQueryTextArea = new TextArea(utils::HtmlEntities($sExpression), 'expression', 120, 8);
+	$oQueryTextArea = new TextArea(utils::EscapeHtml($sExpression), 'expression', 120, 8);
 	$oQueryTextArea->SetName('expression');
 	$oQueryForm->AddSubBlock($oQueryTextArea);
-
-	$oQuerySubmit = ButtonFactory::MakeForPrimaryAction(
-		Dict::S('UI:Button:Evaluate'),
-		null,
-		null,
-		true
-	);
-	$oQueryForm->AddSubBlock($oQuerySubmit);
 
 	$oP->add_linked_script(utils::GetAbsoluteUrlAppRoot()."/js/jquery.hotkeys.js");
 	$oP->add_ready_script(<<<EOF
@@ -196,15 +194,31 @@ EOF
 	);
 
 	if (count($aArgs) > 0) {
-		$oP->add("<div class=\"wizContainer\">\n");
-		$oP->add("<h2>Query arguments</h2>\n");
+		//--- Query arguments
+		$oQueryArgsContainer = PanelFactory::MakeForInformation('Query arguments')
+			->SetCSSClasses(['wizContainer']);
+		$oQueryForm->AddSubBlock($oQueryArgsContainer);
 		foreach ($aArgs as $sParam => $sValue) {
-			$oP->p("$sParam: <input type=\"string\" name=\"arg_$sParam\" value=\"$sValue\">\n");
+			$oArgInput = InputFactory::MakeForInputWithLabel(
+				$sParam,
+				'arg_'.$sParam,
+				$sValue
+			);
+			$oQueryArgsContainer->AddSubBlock($oArgInput);
 		}
-		$oP->add("</div>\n");
 	}
 
+	$oQuerySubmit = ButtonUIBlockFactory::MakeForPrimaryAction(
+		Dict::S('UI:Button:Evaluate'),
+		null,
+		null,
+		true
+	)->SetTooltip(Dict::S('UI:Button:Evaluate:Title'));
+	$oQueryForm->AddSubBlock($oQuerySubmit);
+
+
 	if ($oFilter) {
+		//--- Query filter
 		$oP->add("<h2>Query results</h2>\n");
 
 		$oResultBlock = new DisplayBlock($oFilter, 'list', false);
@@ -230,14 +244,15 @@ EOF
 			iTopWebPage::ENUM_BREADCRUMB_ENTRY_ICON_TYPE_CSS_CLASSES);
 
 
+		//--- More info
 		$aMoreInfoBlocks = [];
 
 		$oDevelopedQuerySet = new FieldSet(Dict::S('UI:RunQuery:DevelopedQuery'));
-		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->ToOQL()).'</pre>'));
+		$oDevelopedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->ToOQL()).'</pre>'));
 		$aMoreInfoBlocks[] = $oDevelopedQuerySet;
 
 		$oSerializedQuerySet = new FieldSet(Dict::S('UI:RunQuery:SerializedFilter'));
-		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::HtmlEntities($oFilter->serialize()).'</pre>'));
+		$oSerializedQuerySet->AddSubBlock(new Html('<pre>'.utils::EscapeHtml($oFilter->serialize()).'</pre>'));
 		$aMoreInfoBlocks[] = $oSerializedQuerySet;
 
 
@@ -286,8 +301,12 @@ EOF
 		$aMoreInfoBlocks[] = $oSqlQuerySet;
 
 		$oMoreInfoSection = new CollapsibleSection(Dict::S('UI:RunQuery:MoreInfo'), $aMoreInfoBlocks);
+		$oMoreInfoSection->EnableSaveCollapsibleState('run_query__more-info');
 		$oP->AddUiBlock($oMoreInfoSection);
 	} elseif ($sSyntaxError) {
+		$oSyntaxErrorPanel = PanelFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'));
+		$oP->AddUiBlock($oSyntaxErrorPanel);
+
 		if ($e instanceof OqlException) {
 			$sWrongWord = $e->GetWrongWord();
 			$aSuggestedWords = $e->GetSuggestions();
@@ -300,31 +319,31 @@ EOF
 					$sAfter = substr($sExpression, $e->GetColumn() + strlen($sWrongWord));
 					$sFixedExpression = $sBefore.$sSuggestedWord.$sAfter;
 					$sFixedExpressionHtml = $sBefore.'<span style="background-color:yellow">'.$sSuggestedWord.'</span>'.$sAfter;
-					$sSyntaxErrorText .= $oP->GetP("Suggesting: $sFixedExpressionHtml");
-					$sEscapedExpression = utils::HtmlEntities(addslashes($sFixedExpression));
-					$sSyntaxErrorText .= $oP->GetP(<<<HTML
-<button onClick="$('textarea[name=expression]')
-	.val('$sEscapedExpression')
-	.focus();">Use this query</button>
-HTML
+					$sSyntaxErrorText .= "<p>Suggesting: $sFixedExpressionHtml</p>";
+					$oSyntaxErrorPanel->AddSubBlock(new Html($sSyntaxErrorText));
+
+					$sEscapedExpression = utils::EscapeHtml(addslashes($sFixedExpression));
+					$oUseSuggestedQueryButton = ButtonUIBlockFactory::MakeForDestructiveAction('Use this query');
+					$oUseSuggestedQueryButton->SetOnClickJsCode(<<<JS
+let \$oQueryTextarea = $('textarea[name=expression]');
+\$oQueryTextarea.val('$sEscapedExpression').focus();
+\$oQueryTextarea.closest('form').submit();
+JS
 					);
+					$oSyntaxErrorPanel->AddSubBlock($oUseSuggestedQueryButton);
 				} else {
-					$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
+					$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));
 				}
 			} else {
-				$sSyntaxErrorText = $oP->GetP($e->getHtmlDesc());
+				$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getHtmlDesc()));
 			}
 		} else {
-			$sSyntaxErrorText = $oP->GetP($e->getMessage());
+			$oSyntaxErrorPanel->AddSubBlock(HtmlFactory::MakeParagraph($e->getMessage()));
 		}
-
-		$oSyntaxErrorPanel = AlertFactory::MakeForFailure(Dict::S('UI:RunQuery:Error'), $sSyntaxErrorText);
-		$oSyntaxErrorPanel->SetOpenedByDefault(true);
-		$oP->AddUiBlock($oSyntaxErrorPanel);
 	}
 }
 catch (Exception $e) {
-	$oErrorAlert = AlertFactory::MakeForFailure(
+	$oErrorAlert = AlertUIBlockFactory::MakeForFailure(
 		Dict::Format('UI:RunQuery:Error', $e->getMessage()),
 		'<pre>'.$e->getTraceAsString().'</pre>'
 	);

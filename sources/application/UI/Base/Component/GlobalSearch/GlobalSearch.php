@@ -42,12 +42,16 @@ class GlobalSearch extends UIBlock
 		'js/components/global-search.js',
 	];
 
-	public const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php?operation=full_text';
+	public const DEFAULT_ENDPOINT_REL_URL = 'pages/UI.php';
 
 	/** @var string $sEndpoint Absolute endpoint URL of the search form */
 	protected $sEndpoint;
+	/** @var string Query currently in the input */
+	protected $sQuery;
 	/** @var array $aLastQueries */
 	protected $aLastQueries;
+	/** @var bool $bShowHistory Whether or not to display the elements in the history */
+	protected $bShowHistory;
 	/** @var int $iMaxHistoryResults Max. number of elements in the history */
 	protected $iMaxHistoryResults;
 
@@ -63,8 +67,10 @@ class GlobalSearch extends UIBlock
 	{
 		parent::__construct($sId);
 		$this->SetEndpoint(static::DEFAULT_ENDPOINT_REL_URL);
+		$this->SetQuery('');
 		$this->SetLastQueries($aLastQueries);
-		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('quick_create.max_history_results');
+		$this->bShowHistory = (bool) MetaModel::GetConfig()->Get('global_search.show_history');
+		$this->iMaxHistoryResults = (int) MetaModel::GetConfig()->Get('global_search.max_history_results');
 	}
 
 	/**
@@ -96,6 +102,36 @@ class GlobalSearch extends UIBlock
 	}
 
 	/**
+	 * @uses $sQuery
+	 * @param string $sQuery
+	 *
+	 * @return $this
+	 */
+	public function SetQuery(string $sQuery)
+	{
+		$this->sQuery = $sQuery;
+		return $this;
+	}
+
+	/**
+	 * @uses $sQuery
+	 * @return string
+	 */
+	public function GetQuery(): string
+	{
+		return $this->sQuery;
+	}
+
+	/**
+	 * @uses $sQuery
+	 * @return bool
+	 */
+	public function HasQuery(): bool
+	{
+		return !empty($this->sQuery);
+	}
+
+	/**
 	 * Set all the last queries at once
 	 *
 	 * @param array $aLastQueries
@@ -117,6 +153,15 @@ class GlobalSearch extends UIBlock
 	public function GetLastQueries()
 	{
 		return $this->aLastQueries;
+	}
+
+	/**
+	 * @see $bShowHistory
+	 * @return bool
+	 */
+	public function GetShowHistory(): bool
+	{
+		return $this->bShowHistory;
 	}
 
 	/**

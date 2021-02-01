@@ -1,27 +1,4 @@
 <?php
-/**
- * Copyright (C) 2013-2020 Combodo SARL
- *
- * This file is part of iTop.
- *
- * iTop is free software; you can redistribute it and/or modify
- * it under the terms of the GNU Affero General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * iTop is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU Affero General Public License for more details.
- *
- * You should have received a copy of the GNU Affero General Public License
- */
-
-class UserRightException extends CoreException
-{
-}
-
-
 define('UR_ALLOWED_NO', 0);
 define('UR_ALLOWED_YES', 1);
 define('UR_ALLOWED_DEPENDS', 2);
@@ -1159,7 +1136,8 @@ class UserRights
 				else
 				{
 					if (ContextTag::Check(ContextTag::TAG_PORTAL)) {
-						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.static::DEFAULT_CONTACT_PICTURE_ATTCODE.'?exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
+						$sSignature = $oPicture->GetSignature();
+						$sPictureUrl = utils::GetAbsoluteUrlAppRoot().'pages/exec.php/object/document/display/'.$sContactClass.'/'.$oContact->GetKey().'/'.static::DEFAULT_CONTACT_PICTURE_ATTCODE.'?cache=86400&s='.$sSignature.'&exec_module=itop-portal-base&exec_page=index.php&portal_id='.PORTAL_ID;
 					}
 					else {
 						$sPictureUrl = $oPicture->GetDisplayURL($sContactClass, $oContact->GetKey(), static::DEFAULT_CONTACT_PICTURE_ATTCODE);

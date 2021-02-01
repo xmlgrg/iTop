@@ -24,6 +24,28 @@
         <icon>images/class-with-lifecycle.png</icon>
       </properties>
     </class>
+    <class id="OtherClass">
+      <properties>
+        <icon revisionid="2" _delta="redefine">
+          <fileref ref="company_0faae3b9d86b7c382b2e4cdae570bc3c" revisionid="62"/>
+        </icon>
+      </properties>
+      <fields>
+        <field id="status" xsi:type="AttributeEnum">
+          <always_load_in_tables>true</always_load_in_tables>
+          <values>
+            <value id="new">new</value>
+            <value id="waiting_for_approval">waiting_for_approval</value>
+          </values>
+        </field>
+        <field id="operational_status" xsi:type="AttributeMetaEnum">
+          <values>
+            <value id="ongoing">ongoing</value>
+            <value id="resolved">resolved</value>
+          </values>
+        </field>
+      </fields>
+    </class>
   </classes>
   <menus>
     <menu id="WelcomeMenuLink1" xsi:type="WebPageMenuNode" _delta="define">

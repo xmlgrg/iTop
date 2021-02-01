@@ -20,8 +20,8 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Alert;
 
 
-use Combodo\iTop\Application\UI\Base\UIBlock;
-use utils;
+use Combodo\iTop\Application\UI\Base\Component\Html\Html;
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 
 /**
  * Class Alert
@@ -30,7 +30,7 @@ use utils;
  * @package Combodo\iTop\Application\UI\Base\Component\Alert
  * @since 3.0.0
  */
-class Alert extends UIBlock
+class Alert extends UIContentBlock
 {
 	// Overloaded constants
 	public const BLOCK_CODE = 'ibo-alert';
@@ -87,8 +87,6 @@ class Alert extends UIBlock
 
 	/** @var string $sTitle */
 	protected $sTitle;
-	/** @var string $sContent The raw HTML content, must be already sanitized */
-	protected $sContent;
 	/** @var string $sColor */
 	protected $sColor;
 	/** @var bool Whether the alert can be closed or not */
@@ -112,13 +110,15 @@ class Alert extends UIBlock
 	 */
 	public function __construct(string $sTitle = '', string $sContent = '', string $sColor = self::DEFAULT_COLOR, ?string $sId = null)
 	{
+		parent::__construct($sId);
 		$this->sTitle = $sTitle;
-		$this->sContent = $sContent;
 		$this->sColor = $sColor;
 		$this->bIsClosable = static::DEFAULT_IS_CLOSABLE;
 		$this->bIsCollapsible = static::DEFAULT_IS_COLLAPSIBLE;
 		$this->bIsOpenedByDefault = static::DEFAULT_IS_OPENED_BY_DEFAULT;
-		parent::__construct($sId);
+		if (!empty($sContent)) {
+			$this->AddSubBlock(new Html($sContent));
+		}
 	}
 
 	/**
@@ -129,8 +129,7 @@ class Alert extends UIBlock
 	public function EnableSaveCollapsibleState($sSectionStateStorageKey)
 	{
 		$this->bIsSaveCollapsibleStateEnabled = true;
-		$sSectionStateStorageKeyPrefix = utils::GetConfig()->GetItopInstanceid();
-		$this->sSectionStateStorageKey = $sSectionStateStorageKeyPrefix.'/'.$sSectionStateStorageKey;
+		$this->sSectionStateStorageKey = 'UI-Collapsible__'.$sSectionStateStorageKey;
 
 		return $this;
 	}

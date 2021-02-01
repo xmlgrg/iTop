@@ -27,6 +27,7 @@ $(function()
 					active_menu_group: null,
 					display_counts: false,
 					filter_keyup_throttle: 200,             // In milliseconds
+					org_id: ''
 				},
 			css_classes:
 				{
@@ -44,6 +45,8 @@ $(function()
 					menu_filter_placeholder: '[data-role="ibo-navigation-menu--menu--placeholder"]',
 					menu_filter_input: '[data-role="ibo-navigation-menu--menu-filter-input"]',
 					menu_filter_clear: '[data-role="ibo-navigation-menu--menu-filter-clear"]',
+					menu_filter_hint: '[data-role="ibo-navigation-menu--menu-filter-hint"]',
+					menu_filter_hint_close: '[data-role="ibo-navigation-menu--menu-filter-hint-close"]',
 					user_menu_toggler: '[data-role="ibo-navigation-menu--user-menu--toggler"]',
 					user_menu_container: '[data-role="ibo-navigation-menu--user-menu-container"]',
 					user_menu: '[data-role="ibo-navigation-menu--user-menu-container"] > [data-role="ibo-popover-menu"]'
@@ -90,7 +93,11 @@ $(function()
 				// - Clear icon
 				this.element.find(this.js_selectors.menu_filter_clear).on('click', function (oEvent) {
 					me._onFilterClearClick(oEvent);
-				})
+				});
+				// - Hint close
+				this.element.find(this.js_selectors.menu_filter_hint_close).on('click', function (oEvent) {
+					me._onFilterHintCloseClick(oEvent);
+				});
 
 				// User info
 				this.element.find(this.js_selectors.user_menu_toggler).on('click', function (oEvent) {
@@ -117,7 +124,12 @@ $(function()
 				oEvent.preventDefault();
 
 				var sMenuGroupId = oMenuGroupElem.attr('data-menu-group-id');
-				this._openDrawer(sMenuGroupId);
+				if(this._getActiveMenuGroupId() === sMenuGroupId) {
+					this._closeDrawer();
+				}
+				else {
+					this._openDrawer(sMenuGroupId);
+				}
 			},
 			_onBodyClick: function(oEvent)
 			{
@@ -175,6 +187,14 @@ $(function()
 				// Position focus in the input for better UX
 				this._focusFilter();
 			},
+			_onFilterHintCloseClick: function(oEvent)
+			{
+				this.element.find(this.js_selectors.menu_filter_hint).hide();
+
+				// Save state in user preferences
+				SetUserPreference('navigation_menu_filter_hint', false, true);
+			},
+
 			_onUserMenuTogglerClick: function(oEvent)
 			{
 				// Avoid anchor glitch
@@ -299,6 +319,7 @@ $(function()
 
 				// Show matching menu node
 				this.element.find('[data-role="ibo-navigation-menu--menu-node"]').each(function () {
+					// Note: We don't filter on data-role="ibo-navigation-menu--menu-node-label" on purpose so we can also filter the counters
 					const sNodeValue = me._formatValueForFilterComparison($(this).children('[data-role="ibo-navigation-menu--menu-node-title"]:first').text());
 					let bMatches = true;
 
@@ -342,7 +363,8 @@ $(function()
 						method: "POST",
 						url: GetAbsoluteUrlAppRoot() + 'pages/ajax.render.php',
 						data: {
-							operation: "get_menus_count"
+							operation: "get_menus_count",
+							c: { org_id: me.options.org_id }
 						},
 						dataType: "json"
 					})

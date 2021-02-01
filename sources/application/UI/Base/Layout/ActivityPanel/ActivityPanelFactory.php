@@ -72,11 +72,13 @@ class ActivityPanelFactory
 		$oActivityPanel->SetObjectMode($sMode);
 
 		// Prepare caselogs
-		$aCaseLogAttCodes = array_keys($oActivityPanel->GetCaseLogTabs());
-		foreach($aCaseLogAttCodes as $sCaseLogAttCode)
+		$aCaseLogTabs = $oActivityPanel->GetCaseLogTabs();
+		foreach($aCaseLogTabs as $sCaseLogAttCode => $aCaseLogData)
 		{
-			// Add new entry block
-			$oActivityPanel->SetCaseLogTabEntryForm($sCaseLogAttCode, CaseLogEntryFormFactory::MakeForCaselogTab($oObject, $sCaseLogAttCode, $sMode));
+			// Add new entry block only if the case log is not read only
+			if (false === $aCaseLogData['is_read_only']) {
+				$oActivityPanel->SetCaseLogTabEntryForm($sCaseLogAttCode, CaseLogEntryFormFactory::MakeForCaselogTab($oObject, $sCaseLogAttCode, $sMode));
+			}
 
 			// Retrieve case logs entries
 			/** @var \ormCaseLog $oCaseLog */
@@ -86,12 +88,6 @@ class ActivityPanelFactory
 				$oCaseLogEntry = ActivityEntryFactory::MakeFromCaseLogEntryArray($sCaseLogAttCode, $aOrmEntry);
 				$oActivityPanel->AddEntry($oCaseLogEntry);
 			}
-		}
-
-		// Activity tab entry form is only in view mode
-		// As caselog tabs input will be attached to the main object form and submit button hidden, we can't have an entry form in the activity tab as it's not for a specific caselog
-		if($sMode === cmdbAbstractObject::ENUM_OBJECT_MODE_VIEW) {
-			$oActivityPanel->SetActivityTabEntryForm(CaseLogEntryFormFactory::MakeForActivityTab($oObject, $sMode));
 		}
 
 		// Retrieve history changes (including case logs entries)

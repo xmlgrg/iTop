@@ -1,5 +1,5 @@
 <div id="{{ oUIBlock.GetId() }}"
-     class="ibo-alert ibo-is-{{ oUIBlock.GetColor() }}{% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}">
+	 class="ibo-alert ibo-is-{{ oUIBlock.GetColor() }}{% if oUIBlock.IsOpenedByDefault() %} ibo-is-opened{% endif %}{% if oUIBlock.IsHidden() %} ibo-is-hidden{% endif %} {{ oUIBlock.GetAdditionalCSSClassesAsString() }}">
 	{% if oUIBlock.IsCollapsible() %}
 		<div class="ibo-alert--action-button ibo-alert--maximize-button" data-role="ibo-alert--collapse-toggler">
 			<i class="fas fa-caret-down"></i>
@@ -14,11 +14,13 @@
 		</div>
 	{% endif %}
 	{% if oUIBlock.GetTitle() is not empty %}
-		<div class="ibo-alert--title"
-		     {% if oUIBlock.IsCollapsible() %}data-role="ibo-alert--collapse-toggler"{% endif %}
-		>{{ oUIBlock.GetTitle() }}</div>
+		<div class="ibo-alert--title" {% if oUIBlock.IsCollapsible() %}data-role="ibo-alert--collapse-toggler"{% endif %}>{{ oUIBlock.GetTitle() }}</div>
 	{% endif %}
-	{% if oUIBlock.GetContent() is not empty %}
-		<div class="ibo-alert--body">{{ oUIBlock.GetContent()|raw }}</div>
+	{% if oUIBlock.GetSubBlocks() is not empty %}
+		<div class="ibo-alert--body">
+			{% for oSubBlock in oUIBlock.GetSubBlocks() %}
+				{{ render_block(oSubBlock, {aPage: aPage}) }}
+			{% endfor %}
+		</div>
 	{% endif %}
 </div>

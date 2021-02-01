@@ -417,13 +417,21 @@
 						<value id="other">
 							<code>other</code>
 						</value>
-						<value id="software patch">software patch</value>
+						<value id="software patch">
+							<code>software patch</code>
+						</value>
 						<value id="training">
 							<code>training</code>
 						</value>
-						<value id="hardware repair">hardware repair</value>
-						<value id="system update">system update</value>
-						<value id="bug fixed">bug fixed</value>
+						<value id="hardware repair">
+							<code>hardware repair</code>
+						</value>
+						<value id="system update">
+							<code>system update</code>
+						</value>
+						<value id="bug fixed">
+							<code>bug fixed</code>
+						</value>
 					</values>
 					<sql>resolution_code</sql>
 					<default_value>assistance</default_value>
@@ -526,23 +534,17 @@
 					<item id="warning">
 						<rank>1</rank>
 						<color>HIGHLIGHT_CLASS_WARNING</color>
-						<style>
 							<icon>images/user-request-deadline.png</icon>
-						</style>
 					</item>
 					<item id="critical">
 						<rank>2</rank>
 						<color>HIGHLIGHT_CLASS_CRITICAL</color>
-						<style>
 							<icon>images/user-request-escalated.png</icon>
-						</style>
 					</item>
 					<item id="closed">
 						<rank>3</rank>
 						<color>HIGHLIGHT_CLASS_NONE</color>
-						<style>
 							<icon>images/user-request-closed.png</icon>
-						</style>
 					</item>
 				</highlight_scale>
 				<stimuli>
@@ -1872,9 +1874,7 @@
 									<dashlet id="9" xsi:type="DashletHeaderDynamic">
 										<rank>0</rank>
 										<title>Organization:Overview:UserRequests</title>
-										<style>
 											<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-										</style>
 										<subtitle>Menu:UserRequest:OpenRequests</subtitle>
 										<query>SELECT UserRequest WHERE status != "closed" AND org_id=:this-&gt;id</query>
 										<group_by>status</group_by>
@@ -1921,9 +1921,7 @@
 							<dashlet id="11" xsi:type="DashletHeaderDynamic">
 								<rank>0</rank>
 								<title>Menu:RequestManagement</title>
-								<style>
 									<icon>itop-welcome-itil/images/user-request-deadline.png</icon>
-								</style>
 								<subtitle>Menu:UserRequest:OpenRequests</subtitle>
 								<query>SELECT UserRequest WHERE status != "closed"</query>
 								<group_by>status</group_by>

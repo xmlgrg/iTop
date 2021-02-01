@@ -7,12 +7,13 @@
 namespace Combodo\iTop\Application\UI\Base\Component\Field;
 
 
+use Combodo\iTop\Application\UI\Base\Layout\UIContentBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
 /**
  * @since 3.0.0
  */
-class Field extends UIBlock
+class Field extends UIContentBlock
 {
 	/** @inheritdoc */
 	public const BLOCK_CODE = 'ibo-field';
@@ -31,8 +32,6 @@ class Field extends UIBlock
 	/** @var string */
 	protected $sAttLabel;
 	/** @var bool */
-	protected $bIsHidden = false;
-	/** @var bool */
 	protected $bIsReadOnly = false;
 	/** @var bool */
 	protected $bIsMandatory = false;
@@ -46,20 +45,20 @@ class Field extends UIBlock
 	protected $sValueRaw;
 	/** @var string */
 	protected $sLabel;
-	/**
-	 * Could be Input, but we have legacy code that needs to set raw HTML !
-	 *
-	 * @var UIBlock
-	 */
-	protected $oValue;
+	/** @var string */
+	protected $sValueId;
+
 	/** @var string */
 	protected $sComments;
 
-	public function __construct(string $sLabel, UIBlock $oValue, ?string $sId = null)
+	public function __construct(string $sLabel, UIBlock $oValue = null, ?string $sId = null)
 	{
 		parent::__construct($sId);
 		$this->sLabel = $sLabel;
-		$this->oValue = $oValue;
+		$this->sValueId = null;
+		if (!is_null($oValue)) {
+			$this->AddSubBlock($oValue);
+		}
 	}
 
 	/**
@@ -138,26 +137,6 @@ class Field extends UIBlock
 	public function SetAttLabel(string $sAttLabel): Field
 	{
 		$this->sAttLabel = $sAttLabel;
-
-		return $this;
-	}
-
-	/**
-	 * @return bool
-	 */
-	public function IsHidden(): bool
-	{
-		return $this->bIsHidden;
-	}
-
-	/**
-	 * @param bool $bIsHidden
-	 *
-	 * @return Field
-	 */
-	public function SetIsHidden(bool $bIsHidden)
-	{
-		$this->bIsHidden = $bIsHidden;
 
 		return $this;
 	}
@@ -341,4 +320,24 @@ class Field extends UIBlock
 
 		return $this;
 	}
+
+	/**
+	 * @return string
+	 */
+	public function GetValueId(): ?string
+	{
+		return $this->sValueId;
+	}
+
+	/**
+	 * @param string|null $sValueId
+	 *
+	 * @return $this
+	 */
+	public function SetValueId(?string $sValueId)
+	{
+		$this->sValueId = $sValueId;
+		return $this;
+	}
+
 }

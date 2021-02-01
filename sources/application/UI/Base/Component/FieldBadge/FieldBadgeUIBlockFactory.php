@@ -8,10 +8,14 @@
 namespace Combodo\iTop\Application\UI\Base\Component\FieldBadge;
 
 
+use Combodo\iTop\Application\UI\Base\AbstractUIBlockFactory;
 use ormStyle;
 
-class FieldBadgeFactory
+class FieldBadgeUIBlockFactory extends AbstractUIBlockFactory
 {
+	public const TWIG_TAG_NAME = 'UIFieldBadge';
+	public const UI_BLOCK_CLASS_NAME = FieldBadge::class;
+
 	/**
 	 * @param string $sValue
 	 * @param \ormStyle|null $oStyle
@@ -26,7 +30,8 @@ class FieldBadgeFactory
 			$sPrimaryColor = $oStyle->GetMainColor();
 			$sComplementaryColor = $oStyle->GetComplementaryColor();
 			if (!is_null($sPrimaryColor) && !is_null($sComplementaryColor)) {
-				$oBadge = new FieldBadge(null, $sStyleClass.' ibo-field-badge');
+				$aCSSClasses = array_merge(explode(' ', $sStyleClass), ['ibo-field-badge']);
+				$oBadge = new FieldBadge(null, $aCSSClasses);
 				$sDecorationClasses = $oStyle->GetDecorationClasses();
 				if (!is_null($sDecorationClasses)) {
 					$oBadge->AddHtml("<i class=\"$sDecorationClasses\"></i>&nbsp;");

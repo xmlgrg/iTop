@@ -19,7 +19,7 @@
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletContainer;
 use Combodo\iTop\Application\UI\Base\Component\Dashlet\DashletFactory;
 use Combodo\iTop\Application\UI\Base\Component\Html\Html;
-use Combodo\iTop\Application\UI\Base\Component\Panel\PanelFactory;
+use Combodo\iTop\Application\UI\Base\Component\Panel\PanelUIBlockFactory;
 use Combodo\iTop\Application\UI\Base\iUIBlock;
 use Combodo\iTop\Application\UI\Base\UIBlock;
 
@@ -212,14 +212,13 @@ abstract class Dashlet
 	{
 		$sId = $this->GetID();
 
-		$sCSSClasses = implode(' ', $this->aCSSClasses);
 		if ($bEnclosingDiv) {
 			if ($bEditMode) {
 				$oDashletContainer = new DashletContainer("dashlet_{$sId}");
 			} else {
 				$oDashletContainer = new DashletContainer();
 			}
-			$oDashletContainer->AddCSSClasses($sCSSClasses);
+			$oDashletContainer->AddCSSClasses($this->aCSSClasses);
 		} else {
 			$oDashletContainer = new DashletContainer();
 
@@ -239,14 +238,14 @@ abstract class Dashlet
 			// Maybe the class is part of a non-installed module, fail silently
 			// Except in Edit mode
 			if ($bEditMode) {
-				$oDashletContainer->AddCSSClasses("dashlet-content");
+				$oDashletContainer->AddCSSClass("dashlet-content");
 				$oDashletContainer->AddHtml('<h2>'.$e->GetUserFriendlyDescription().'</h2>');
 			}
 		} catch (OqlException $e) {
-			$oDashletContainer->AddCSSClasses("dashlet-content");
+			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.$e->GetUserFriendlyDescription().'</p>');
 		} catch (Exception $e) {
-			$oDashletContainer->AddCSSClasses("dashlet-content");
+			$oDashletContainer->AddCSSClass("dashlet-content");
 			$oDashletContainer->AddHtml('<p>'.$e->getMessage().'</p>');
 		}
 
@@ -602,7 +601,7 @@ class DashletUnknown extends Dashlet
 		$sIconUrl = utils::HtmlEntities(utils::GetAbsoluteUrlAppRoot().$aInfos['icon']);
 		$sExplainText = ($bEditMode) ? Dict::Format('UI:DashletUnknown:RenderText:Edit', $this->GetDashletType()) : Dict::S('UI:DashletUnknown:RenderText:View');
 
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
 		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
 		$oDashletContainer->AddHtml('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
@@ -622,7 +621,7 @@ class DashletUnknown extends Dashlet
 		$sIconUrl = utils::HtmlEntities(utils::GetAbsoluteUrlAppRoot().$aInfos['icon']);
 		$sExplainText = Dict::Format('UI:DashletUnknown:RenderNoDataText:Edit', $this->GetDashletType());
 
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
 		$oDashletContainer->AddHtml('<div class="dashlet-ukn-image"><img src="'.$sIconUrl.'" /></div>');
 		$oDashletContainer->AddHtml('<div class="dashlet-ukn-text">'.$sExplainText.'</div>');
@@ -746,7 +745,7 @@ class DashletProxy extends DashletUnknown
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
 		// This should never be called.
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 		$oDashletContainer->AddHtml('<div>This dashlet is not supposed to be rendered as it is just a proxy for third-party widgets.</div>');
 		return $oDashletContainer;
 	}
@@ -763,7 +762,7 @@ class DashletProxy extends DashletUnknown
 		$sIconUrl = utils::HtmlEntities(utils::GetAbsoluteUrlAppRoot().$aInfos['icon']);
 		$sExplainText = Dict::Format('UI:DashletProxy:RenderNoDataText:Edit', $this->GetDashletType());
 
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
 		$sHtml = '';
 		$sHtml .= '<div class="dashlet-pxy-image"><img src="'.$sIconUrl.'" /></div>';
@@ -905,7 +904,7 @@ class DashletObjectList extends Dashlet
 		$sShowMenu = $this->aProperties['menu'] ? '1' : '0';
 		$oFilter = $this->GetDBSearch($aExtraParams);
 		$sClass = $oFilter->GetClass();
-		$oPanel = PanelFactory::MakeForClass($sClass, Dict::S($sTitle));
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
 
 		$oBlock = new DisplayBlock($oFilter, 'list');
 		$aParams = array(
@@ -1241,7 +1240,7 @@ abstract class DashletGroupBy extends Dashlet
 				break;
 		}
 
-		$oPanel = PanelFactory::MakeForClass($sClass, Dict::S($sTitle));
+		$oPanel = PanelUIBlockFactory::MakeForClass($sClass, Dict::S($sTitle));
 
 
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occurring in the same DOM)
@@ -1333,7 +1332,7 @@ abstract class DashletGroupBy extends Dashlet
 	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 		$oDashletContainer->AddHtml('error!');
 		return $oDashletContainer;
 	}
@@ -1656,7 +1655,7 @@ class DashletGroupByPie extends DashletGroupBy
 	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
 		$sTitle = $this->aProperties['title'];
 
@@ -1731,7 +1730,7 @@ class DashletGroupByBars extends DashletGroupBy
 	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
 		$sTitle = $this->aProperties['title'];
 
@@ -2043,7 +2042,7 @@ class DashletHeaderDynamic extends Dashlet
 			);
 		}
 
-		$oPanel = PanelFactory::MakeEnhancedNeutral(Dict::S(str_replace('_', ':', $sTitle)), $sIconPath);
+		$oPanel = PanelUIBlockFactory::MakeEnhancedNeutral(Dict::S(str_replace('_', ':', $sTitle)), $sIconPath);
 
 		if (isset($aExtraParams['query_params'])) {
 			$aQueryParams = $aExtraParams['query_params'];
@@ -2055,7 +2054,7 @@ class DashletHeaderDynamic extends Dashlet
 		}
 		$oFilter = DBObjectSearch::FromOQL($sQuery, $aQueryParams);
 		$sClass = $oFilter->GetClass();
-		PanelFactory::SetClassColor($sClass, $oPanel);
+		PanelUIBlockFactory::SetClassColor($sClass, $oPanel);
 		$oBlock = new DisplayBlock($oFilter, 'summary');
 		$sBlockId = 'block_'.$this->sId.($bEditMode ? '_edit' : ''); // make a unique id (edition occuring in the same DOM)
 		$oBlock->DisplayIntoContentBlock($oPanel, $oPage, $sBlockId, array_merge($aExtraParams, $aParams));
@@ -2087,7 +2086,7 @@ class DashletHeaderDynamic extends Dashlet
 		$oIconSelect = $this->oModelReflection->GetIconSelectionField('icon');
 		$sIconPath = utils::HtmlEntities($oIconSelect->MakeFileUrl($sIcon));
 
-		$oDashletContainer = new DashletContainer(null, 'dashlet-content');
+		$oDashletContainer = new DashletContainer(null, ['dashlet-content']);
 
 		$sHtml = '';
 		$sHtml .= '<img src="'.$sIconPath.'">';
@@ -2284,7 +2283,7 @@ class DashletBadge extends Dashlet
 	 */
 	public function Render($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oDashletContainer = new DashletContainer($this->sId, 'dashlet-content');
+		$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
 
 		$sClass = $this->aProperties['class'];
 		$oFilter = new DBObjectSearch($sClass);
@@ -2301,7 +2300,7 @@ class DashletBadge extends Dashlet
 	 */
 	public function RenderNoData($oPage, $bEditMode = false, $aExtraParams = array())
 	{
-		$oDashletContainer = new DashletContainer($this->sId, 'dashlet-content');
+		$oDashletContainer = new DashletContainer($this->sId, ['dashlet-content']);
 
 		$sClass = $this->aProperties['class'];
 		$sIconUrl = $this->oModelReflection->GetClassIcon($sClass, false);
